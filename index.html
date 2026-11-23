@@ -3,11 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的数字土地 · 机械设计与AI探索</title>
-    <meta name="description" content="机械设计从业者的个人网站：项目展示、知识库、AI时代的数字资产。">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>任瑞 · 机械设计实践者</title>
+    <meta name="description" content="任瑞的个人网站，机械设计实践者。公开项目包括机械制图识图辅助、机器狗手势交互、手机 IMU 实验，以及数智化实践教学探索。">
+    <link rel="canonical" href="https://bigcow2018.github.io/">
+    <link rel="icon" href="https://bigcow2018.github.io/assets/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="https://bigcow2018.github.io/assets/avatar.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://bigcow2018.github.io/assets/avatar.png">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:url" content="https://bigcow2018.github.io/">
+    <meta property="og:title" content="任瑞 · 机械设计实践者">
+    <meta property="og:description" content="任瑞的个人网站。公开项目包括机械制图识图辅助、机器狗手势交互、手机 IMU 实验，以及数智化实践教学探索。">
+    <meta property="og:image" content="https://bigcow2018.github.io/assets/og.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="任瑞 · 机械设计实践者">
+    <meta name="twitter:description" content="任瑞的个人网站。公开项目包括机械制图识图辅助、机器狗手势交互、手机 IMU 实验，以及数智化实践教学探索。">
+    <meta name="twitter:image" content="https://bigcow2018.github.io/assets/og.png">
     <style>
         :root {
             --bg: #f8f9fa;
@@ -23,7 +34,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body {
-            font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
+            font-family: system-ui, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.7;
@@ -41,9 +52,38 @@
         .nav-inner {
             display: flex; justify-content: space-between; align-items: center;
             height: 68px;
+            position: relative;
         }
-        .logo { font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em; }
+        .logo {
+            font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em;
+            text-decoration: none; color: var(--text);
+        }
         .logo span { color: var(--accent); }
+        .nav-toggle-input {
+            position: absolute;
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+        .nav-toggle {
+            display: none;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .nav-toggle span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: var(--text);
+            border-radius: 1px;
+        }
         .nav-links { display: flex; gap: 28px; list-style: none; }
         .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 500; font-size: 0.95rem; transition: color 0.2s; }
         .nav-links a:hover { color: var(--accent); }
@@ -52,6 +92,17 @@
         .hero {
             padding: 100px 0 80px;
             text-align: center;
+        }
+        .hero-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 24px;
+            display: block;
+            background: #fff;
+            border: 3px solid #fff;
+            box-shadow: var(--shadow);
         }
         .hero-badge {
             display: inline-block;
@@ -152,8 +203,14 @@
         .project-body { padding: 24px; }
         .project-body h3 { margin-bottom: 8px; font-size: 1.15rem; }
         .project-body p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 16px; }
+        .project-links { display: flex; flex-wrap: wrap; gap: 16px; }
         .project-link { color: var(--accent); font-weight: 500; text-decoration: none; font-size: 0.9rem; }
         .project-link:hover { text-decoration: underline; }
+        .project-soon {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
 
         /* Knowledge */
         .kb-list { display: flex; flex-direction: column; gap: 16px; }
@@ -163,8 +220,13 @@
             border-radius: var(--radius);
             border-left: 4px solid var(--accent);
             box-shadow: var(--shadow);
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .kb-item h4 { margin-bottom: 6px; }
+        .kb-item:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.08); }
+        .kb-item h3 { margin-bottom: 6px; font-size: 1.05rem; }
         .kb-item p { color: var(--text-muted); font-size: 0.95rem; }
 
         /* Tools / Nav */
@@ -183,8 +245,10 @@
         }
         .tool-card:hover { transform: translateY(-4px); }
         .tool-card .icon { font-size: 2rem; margin-bottom: 8px; }
-        .tool-card h4 { font-size: 1rem; margin-bottom: 4px; }
-        .tool-card p { font-size: 0.85rem; color: var(--text-muted); }
+        .tool-card h3 { font-size: 1rem; margin-bottom: 8px; }
+        .tool-card p, .tool-card .tool-links { font-size: 0.85rem; color: var(--text-muted); }
+        .tool-card a { color: var(--accent); text-decoration: none; }
+        .tool-card a:hover { text-decoration: underline; }
 
         /* Contact */
         .contact-box {
@@ -195,6 +259,8 @@
             box-shadow: var(--shadow);
         }
         .contact-box p { color: var(--text-muted); margin-bottom: 24px; }
+        .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+        .contact-actions .btn-secondary { margin-left: 0; }
 
         footer {
             padding: 40px 0;
@@ -203,25 +269,62 @@
             font-size: 0.9rem;
             border-top: 1px solid var(--border);
         }
+        .footer-links {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 20px;
+            list-style: none; margin-bottom: 16px;
+        }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-weight: 500; }
+        .footer-links a:hover { color: var(--accent); }
+
+        a:focus-visible, .nav-toggle:focus-visible, .nav-toggle-input:focus-visible + .nav-toggle {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .project-card, .kb-item, .tool-card, .btn { transition: none; }
+        }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .nav-links { display: none; }
+            .nav-toggle { display: flex; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 68px;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                gap: 0;
+                background: rgba(248,249,250,0.98);
+                border-bottom: 1px solid var(--border);
+                padding: 8px 0 16px;
+                box-shadow: var(--shadow);
+            }
+            .nav-links li a { display: block; padding: 12px 24px; }
+            #nav-toggle:checked ~ .nav-links { display: flex; }
             .about-grid { grid-template-columns: 1fr; }
             .hero { padding: 70px 0 50px; }
             section { padding: 60px 0; }
-            .btn-secondary { margin-left: 0; margin-top: 12px; display: block; }
+            .btn-secondary { margin-left: 0; margin-top: 0; }
+            .hero .btn-secondary { display: inline-block; margin-top: 12px; }
+            .contact-box { padding: 32px 20px; }
         }
     </style>
 </head>
 <body>
     <nav>
         <div class="container nav-inner">
-            <div class="logo">数字<span>土地</span></div>
+            <a href="/" class="logo">数字<span>土地</span></a>
+            <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
+            <label for="nav-toggle" class="nav-toggle" aria-label="打开或关闭菜单">
+                <span></span><span></span><span></span>
+            </label>
             <ul class="nav-links">
                 <li><a href="#about">关于</a></li>
                 <li><a href="#projects">项目</a></li>
-                <li><a href="#knowledge">知识库</a></li>
+                <li><a href="#knowledge">实验页</a></li>
                 <li><a href="#tools">工具</a></li>
                 <li><a href="#contact">联系</a></li>
             </ul>
@@ -230,9 +333,10 @@
 
     <header class="hero">
         <div class="container">
-            <div class="hero-badge">AI 时代 · 属于自己的数字土地</div>
-            <h1>你好，我是<br><span>机械设计实践者</span></h1>
-            <p>在这里记录机电实验、3D 设计、AI 工具探索与创作。不再只是在别人的平台上租一个位置，而是拥有一块真正属于自己的数字资产。</p>
+            <img class="hero-avatar" src="assets/avatar.png" width="120" height="120" alt="任瑞的 GitHub 头像">
+            <div class="hero-badge">机械设计 · 实验与可视化</div>
+            <h1>你好，我是<br><span>任瑞</span></h1>
+            <p>机械设计实践者。我做机电实验页、机械制图识图辅助和机器狗手势交互，也在探索数智化实践教学。</p>
             <a href="#projects" class="btn">查看项目</a>
             <a href="#contact" class="btn btn-secondary">联系我</a>
         </div>
@@ -241,22 +345,21 @@
     <section id="about">
         <div class="container">
             <h2>关于我</h2>
-            <p class="section-sub">机械设计从业者，专注机电一体化、控制与可视化。</p>
+            <p class="section-sub">任瑞，机械设计实践者，关注机电实验、交互式可视化与实践教学。</p>
             <div class="about-grid">
                 <div class="about-card">
-                    <h3>专业方向</h3>
-                    <p>从事机械设计工作，涉及 PLC、气动/液压、伺服电机、运动平台等机电系统。同时进行 3D 建模、交互式可视化、产品文档与实验平台开发。</p>
+                    <h3>正在做的事</h3>
+                    <p>从事机械设计工作，并在网页上做可交互的实验与教学辅助工具。已公开的实践包括机械制图识图辅助、摄像头上手势驱动的机器狗画面，以及手机 IMU、磁场、风扇动平衡等传感器实验页。</p>
                     <div class="tags">
                         <span class="tag">机械设计</span>
-                        <span class="tag">机电一体化</span>
-                        <span class="tag">3D 建模</span>
-                        <span class="tag">PLC / 控制</span>
-                        <span class="tag">AI 工具</span>
+                        <span class="tag">实践教学</span>
+                        <span class="tag">机电实验</span>
+                        <span class="tag">可视化</span>
                     </div>
                 </div>
                 <div class="about-card">
                     <h3>为什么做这个网站</h3>
-                    <p>社交平台的内容可见性由算法决定。个人网站让我可以自己决定内容、结构与展示方式。课程笔记、项目记录、作品集、创业想法……十年后回头看，它可能成为最珍贵的数字资产。</p>
+                    <p>社交平台的内容可见性由算法决定。个人网站让我可以自己决定内容、结构与展示方式。课程笔记、项目记录、作品集……十年后回头看，它可能成为最珍贵的数字资产。</p>
                 </div>
             </div>
         </div>
@@ -265,38 +368,47 @@
     <section id="projects" style="background:#f1f5f9;">
         <div class="container">
             <h2>项目展示</h2>
-            <p class="section-sub">部分近期实践与探索（持续更新）</p>
+            <p class="section-sub">从公开实践里选出的四个代表项目</p>
             <div class="projects-grid">
                 <div class="project-card">
-                    <div class="project-img">⚙️</div>
+                    <div class="project-img">📚</div>
                     <div class="project-body">
-                        <h3>机电实验平台</h3>
-                        <p>5 轴运动平台、曲柄/凸轮/连杆机构的运动学分析、FEA 仿真与文档化。包含爆炸视图与交互展示。</p>
-                        <a href="#" class="project-link">了解更多 →</a>
+                        <h3>数智化实践教学管理平台</h3>
+                        <p>面向实践教学的管理平台。已规划四期演示：SaaS，以及减速器拆装 / 砂型铸造、手机立体教材、齿轮范成仪。</p>
+                        <span class="project-soon">介绍即将发布</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img">📐</div>
+                    <div class="project-body">
+                        <h3>机械制图识图辅助</h3>
+                        <p>手机端看图学习工具，对应教材第 5～8 章与附录。支持对书本或图纸拍照提取线框与圆孔示意，并提供章节图册和机构示意动画。明确用于识图学习，不是自动出图或精密测量。</p>
+                        <div class="project-links">
+                            <a class="project-link" href="https://bigcow2018.github.io/jixiezhitu/" target="_blank" rel="noopener">打开演示 →</a>
+                            <a class="project-link" href="https://github.com/bigcow2018/jixiezhitu" target="_blank" rel="noopener">GitHub</a>
+                        </div>
                     </div>
                 </div>
                 <div class="project-card">
                     <div class="project-img">🤖</div>
                     <div class="project-body">
-                        <h3>机械狗 & 倒立摆</h3>
-                        <p>DIY 机械狗升级、并联倒立摆控制实验。从硬件搭建、接线到控制算法调试。</p>
-                        <a href="#" class="project-link">了解更多 →</a>
+                        <h3>机器狗 · 手势场</h3>
+                        <p>打开前置摄像头，用 MediaPipe 做 21 点手指追踪，把机器狗画面叠在实景上。比出 1 / 2 / 3 / 4 或左右摇手，可切换抬腿欢迎、后空翻、跳跃等动作演示。</p>
+                        <div class="project-links">
+                            <a class="project-link" href="https://bigcow2018.github.io/dog-cam/" target="_blank" rel="noopener">打开演示 →</a>
+                            <a class="project-link" href="https://github.com/bigcow2018/dog-cam" target="_blank" rel="noopener">GitHub</a>
+                        </div>
                     </div>
                 </div>
                 <div class="project-card">
-                    <div class="project-img">🌐</div>
+                    <div class="project-img">📱</div>
                     <div class="project-body">
-                        <h3>数字孪生 Web 应用</h3>
-                        <p>浏览器端 3D 模型查看器 / 配置器（GLB/STP），支持爆炸视图、动画与标注。用于生产设备与实验室布局。</p>
-                        <a href="#" class="project-link">了解更多 →</a>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-img">🎨</div>
-                    <div class="project-body">
-                        <h3>AI 辅助可视化</h3>
-                        <p>产品图编辑、效果图转写实渲染、品牌资产生成。结合 ComfyUI、本地 LLM 等工作流。</p>
-                        <a href="#" class="project-link">了解更多 →</a>
+                        <h3>IMU Sensor Pro Lab</h3>
+                        <p>手机端 IMU 实验页。读取加速度与姿态（Pitch / Roll / Yaw），用曲线图和 3D 模型同步显示设备运动。</p>
+                        <div class="project-links">
+                            <a class="project-link" href="https://project-yjzuk.vercel.app/" target="_blank" rel="noopener">打开演示 →</a>
+                            <a class="project-link" href="https://github.com/bigcow2018/shuojiceshi" target="_blank" rel="noopener">GitHub</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -305,49 +417,59 @@
 
     <section id="knowledge">
         <div class="container">
-            <h2>知识库 / 笔记</h2>
-            <p class="section-sub">整理的文章、实验记录与心得（可扩展为博客）</p>
+            <h2>相关实验页</h2>
+            <p class="section-sub">更多可在浏览器里直接打开的公开实验，不是博客目录。</p>
             <div class="kb-list">
-                <div class="kb-item">
-                    <h4>机电系统接线与调试笔记</h4>
-                    <p>一步步的接线教程、万用表使用、常见故障排查。持续更新中。</p>
-                </div>
-                <div class="kb-item">
-                    <h4>本地 AI 工具实践</h4>
-                    <p>Ollama、ComfyUI、DeepSeek、Gemma 等本地模型的安装、优化与多模型工作流。</p>
-                </div>
-                <div class="kb-item">
-                    <h4>3D 交互与可视化技巧</h4>
-                    <p>Web 端 3D 查看器、爆炸视图、动画制作经验分享。</p>
-                </div>
+                <a class="kb-item" href="https://bigcow2018.github.io/fengshanceshi/" target="_blank" rel="noopener">
+                    <h3>风扇动平衡测试</h3>
+                    <p>将手机竖放固定，用振动与麦克风采样做风扇动平衡监测示意：先标定基线，再根据振动或声音变化给出 OK / NG 提示。</p>
+                </a>
+                <a class="kb-item" href="https://bigcow2018.github.io/cichangcesiv2/" target="_blank" rel="noopener">
+                    <h3>磁场监测</h3>
+                    <p>读取设备磁力计，显示合成磁场 |B|、相对零点变化和三轴分量曲线。需在支持 Generic Sensor 的 Chrome 中以 HTTPS 打开。</p>
+                </a>
+                <a class="kb-item" href="https://bigcow2018.github.io/PPGceshi/" target="_blank" rel="noopener">
+                    <h3>PPG 心率示意</h3>
+                    <p>用后置摄像头读取画面红色分量，示意光电容积脉搏波并估算 BPM。页面标明非医疗用途，结果受按压、光线和设备影响。</p>
+                </a>
+                <a class="kb-item" href="https://bigcow2018.github.io/shoushi/" target="_blank" rel="noopener">
+                    <h3>手部骨骼 · 丝绸物理</h3>
+                    <p>网络摄像头实时 21 点手部骨骼，叠加以指尖为跟随目标的丝绸飘带物理效果，基于 MediaPipe 手部模型。</p>
+                </a>
             </div>
         </div>
     </section>
 
     <section id="tools" style="background:#f1f5f9;">
         <div class="container">
-            <h2>个人导航站</h2>
-            <p class="section-sub">常用工具与资源收藏</p>
+            <h2>常用工具</h2>
+            <p class="section-sub">日常会用到的工具，链接指向各自官网。</p>
             <div class="tools-grid">
                 <div class="tool-card">
                     <div class="icon">🤖</div>
-                    <h4>AI 工具</h4>
-                    <p>Grok / Claude / Cursor / ComfyUI</p>
+                    <h3>AI 工具</h3>
+                    <p class="tool-links">
+                        <a href="https://grok.com" target="_blank" rel="noopener">Grok</a> /
+                        <a href="https://claude.ai" target="_blank" rel="noopener">Claude</a> /
+                        <a href="https://cursor.com" target="_blank" rel="noopener">Cursor</a> /
+                        <a href="https://www.comfy.org" target="_blank" rel="noopener">ComfyUI</a>
+                    </p>
                 </div>
                 <div class="tool-card">
                     <div class="icon">📐</div>
-                    <h4>设计软件</h4>
-                    <p>SolidWorks / Blender / CAD</p>
+                    <h3>设计软件</h3>
+                    <p class="tool-links">
+                        <a href="https://www.solidworks.com" target="_blank" rel="noopener">SolidWorks</a> /
+                        <a href="https://www.blender.org" target="_blank" rel="noopener">Blender</a>
+                    </p>
                 </div>
                 <div class="tool-card">
                     <div class="icon">💻</div>
-                    <h4>开发工具</h4>
-                    <p>VS Code / GitHub / Web 技术</p>
-                </div>
-                <div class="tool-card">
-                    <div class="icon">📚</div>
-                    <h4>学习资源</h4>
-                    <p>机电教材 / 在线课程 / 论文</p>
+                    <h3>开发工具</h3>
+                    <p class="tool-links">
+                        <a href="https://code.visualstudio.com" target="_blank" rel="noopener">VS Code</a> /
+                        <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -357,18 +479,36 @@
         <div class="container">
             <div class="contact-box">
                 <h2>联系我</h2>
-                <p>欢迎交流机械设计、AI 工具、项目合作或任何想法。<br>这是属于我的数字土地，也欢迎你来访。</p>
-                <a href="mailto:your-email@example.com" class="btn">发送邮件</a>
-                <p style="margin-top: 24px; font-size: 0.9rem;">也可通过 GitHub / 微信 联系（请自行替换联系方式）</p>
+                <p>欢迎交流机械设计、实验工具、项目合作或任何想法。<br>这是属于我的数字土地，也欢迎你来访。</p>
+                <div class="contact-actions">
+                    <a href="mailto:bigcow97@qq.com" class="btn">发送邮件</a>
+                    <a href="https://github.com/bigcow2018" class="btn btn-secondary" target="_blank" rel="noopener">GitHub 主页</a>
+                </div>
             </div>
         </div>
     </section>
 
     <footer>
         <div class="container">
-            <p>© 2026 我的数字土地 · 用 AI 与双手建造</p>
+            <ul class="footer-links">
+                <li><a href="#about">关于</a></li>
+                <li><a href="#projects">项目</a></li>
+                <li><a href="#knowledge">实验页</a></li>
+                <li><a href="#tools">工具</a></li>
+                <li><a href="#contact">联系</a></li>
+                <li><a href="https://github.com/bigcow2018" target="_blank" rel="noopener">GitHub</a></li>
+            </ul>
+            <p>© 2026 任瑞 · 我的数字土地 · 用 AI 与双手建造</p>
             <p style="margin-top: 8px;">“哪怕现在没人访问，十年以后回头看，它也可能成为你最珍贵的数字资产。”</p>
         </div>
     </footer>
+    <script>
+        document.querySelectorAll('.nav-links a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                var toggle = document.getElementById('nav-toggle');
+                if (toggle) toggle.checked = false;
+            });
+        });
+    </script>
 </body>
 </html>
