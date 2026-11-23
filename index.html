@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>任瑞 · 机械设计实践者</title>
-    <meta name="description" content="任瑞的个人网站，机械设计实践者。公开项目包括机械制图识图辅助、机器狗手势交互、手机 IMU 实验，以及数智化实践教学探索。">
+    <meta name="description" content="任瑞的个人网站，机械设计实践者。公开项目包括机械制图识图辅助、机器狗手势交互、手机 IMU 实验、数智化实践教学探索，以及在 Grok 上发布的互动应用。">
     <link rel="canonical" href="https://bigcow2018.github.io/">
     <link rel="icon" href="https://bigcow2018.github.io/assets/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="https://bigcow2018.github.io/assets/favicon.png" type="image/png">
@@ -13,11 +13,11 @@
     <meta property="og:locale" content="zh_CN">
     <meta property="og:url" content="https://bigcow2018.github.io/">
     <meta property="og:title" content="任瑞 · 机械设计实践者">
-    <meta property="og:description" content="任瑞的个人网站。公开项目包括机械制图识图辅助、机器狗手势交互、手机 IMU 实验，以及数智化实践教学探索。">
+    <meta property="og:description" content="任瑞的个人网站。公开项目包括机械制图识图辅助、机器狗手势交互、手机 IMU 实验、数智化实践教学探索，以及在 Grok 上发布的互动应用。">
     <meta property="og:image" content="https://bigcow2018.github.io/assets/og.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="任瑞 · 机械设计实践者">
-    <meta name="twitter:description" content="任瑞的个人网站。公开项目包括机械制图识图辅助、机器狗手势交互、手机 IMU 实验，以及数智化实践教学探索。">
+    <meta name="twitter:description" content="任瑞的个人网站。公开项目包括机械制图识图辅助、机器狗手势交互、手机 IMU 实验、数智化实践教学探索，以及在 Grok 上发布的互动应用。">
     <meta name="twitter:image" content="https://bigcow2018.github.io/assets/og.png">
     <style>
         @font-face {
@@ -530,6 +530,92 @@
         }
         .footer-links a:hover { color: var(--blueprint); }
 
+
+        .wall-tools {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px 16px;
+            align-items: end;
+            margin-bottom: 16px;
+            border: 1px solid var(--ink);
+            background: rgba(239, 232, 214, 0.65);
+            padding: 10px 14px 12px;
+        }
+        .wall-search { display: block; }
+        .wall-search .tb-label { margin-bottom: 6px; }
+        .wall-search input {
+            display: block;
+            width: 100%;
+            min-height: 44px;
+            border: 1px solid var(--ink);
+            background: var(--sheet);
+            color: var(--ink);
+            padding: 10px 12px;
+            font: inherit;
+            font-size: 0.95rem;
+        }
+        .wall-search input::placeholder { color: var(--ink-soft); }
+        .wall-count {
+            color: var(--copper);
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+            padding-bottom: 12px;
+        }
+        .grok-wall {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 12px;
+        }
+        .wall-card {
+            border: 1px solid var(--ink);
+            background: var(--sheet);
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+        }
+        .wall-card:hover { background: rgba(227, 220, 203, 0.8); color: inherit; }
+        .wall-card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--ink);
+            padding: 6px 10px;
+            font-size: 0.68rem;
+            letter-spacing: 0.1em;
+        }
+        .wall-card-head .dwg-id { color: var(--copper); }
+        .wall-card-head .status { color: var(--ink-soft); text-align: right; }
+        .wall-card-body {
+            padding: 12px 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+        .wall-card-body strong {
+            font-size: 0.98rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            line-height: 1.4;
+            color: var(--ink);
+            flex: 1;
+        }
+        .wall-open {
+            color: var(--blueprint);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .wall-card:hover .wall-open { text-decoration: underline; }
+        .wall-empty {
+            margin-top: 16px;
+            color: var(--ink-soft);
+            font-size: 0.95rem;
+        }
+
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
         }
@@ -563,6 +649,8 @@
             .sec-head { grid-template-columns: auto 1fr; }
             .sec-en { display: none; }
             .about-grid, .projects-grid { grid-template-columns: 1fr; }
+            .wall-tools { grid-template-columns: 1fr; gap: 4px; }
+            .wall-count { padding-bottom: 0; }
             .about-col + .about-col { border-left: 0; border-top: 1px solid var(--ink); }
             .bom-head { display: none; }
             .bom-head, .bom-row { grid-template-columns: 56px 1fr auto; gap: 8px; padding: 12px; }
@@ -595,9 +683,10 @@
                 <ul class="nav-links">
                     <li><a href="#about"><span class="n mono">01</span>关于</a></li>
                     <li><a href="#projects"><span class="n mono">02</span>项目</a></li>
-                    <li><a href="#knowledge"><span class="n mono">03</span>实验</a></li>
-                    <li><a href="#tools"><span class="n mono">04</span>工具</a></li>
-                    <li><a href="#contact"><span class="n mono">05</span>联系</a></li>
+                    <li><a href="#grok-apps"><span class="n mono">03</span>应用墙</a></li>
+                    <li><a href="#knowledge"><span class="n mono">04</span>实验</a></li>
+                    <li><a href="#tools"><span class="n mono">05</span>工具</a></li>
+                    <li><a href="#contact"><span class="n mono">06</span>联系</a></li>
                 </ul>
             </div>
         </nav>
@@ -619,7 +708,7 @@
                         <p class="lead">我做机电实验页、机械制图识图辅助和机器狗手势交互，也在探索数智化实践教学。</p>
                         <div class="hero-actions">
                             <a href="#projects" class="ref-link solid"><span class="n mono">02</span>查看项目</a>
-                            <a href="#contact" class="ref-link"><span class="n mono">05</span>联系我</a>
+                            <a href="#contact" class="ref-link"><span class="n mono">06</span>联系我</a>
                         </div>
                     </div>
                 </div>
@@ -723,10 +812,621 @@
                 </div>
             </section>
 
-            <section id="knowledge">
+            <section id="grok-apps">
                 <div class="wrap">
                     <div class="sec-head">
                         <span class="fig">03</span>
+                        <h2>应用墙</h2>
+                        <span class="sec-en">GROK APPS</span>
+                    </div>
+                    <p class="subnote">共 59 个已在 Grok 上发布的互动应用，均可在新标签页打开。下面按资料库中的名称列出。</p>
+                    <div class="wall-tools">
+                        <label class="wall-search" for="grok-app-filter">
+                            <span class="tb-label">SEARCH</span>
+                            <input type="search" id="grok-app-filter" placeholder="按名称查找" autocomplete="off">
+                        </label>
+                        <p class="wall-count mono" id="grok-app-count" aria-live="polite">59 / 59</p>
+                    </div>
+                    <div class="grok-wall" id="grok-app-wall">
+                        <a class="wall-card" href="https://arch-wind-island-yonder.grok.me" target="_blank" rel="noopener" data-title="手机凸面镜模拟铁碳合金显微观察动画">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-01</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>手机凸面镜模拟铁碳合金显微观察动画</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://stone-blend-ember-valley.grok.me" target="_blank" rel="noopener" data-title="利用手势模型生成ar写字演示应用">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-02</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>利用手势模型生成AR写字演示应用</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://cosmic-lilac-branch-thunder.grok.me" target="_blank" rel="noopener" data-title="生成音乐符号手势识别纯音乐app">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-03</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>生成音乐符号手势识别纯音乐App</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://granite-iris-plaza-sky.grok.me" target="_blank" rel="noopener" data-title="通过手机前置摄像头实现hashemghaili项目功能">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-04</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>通过手机前置摄像头实现HashemGhaili项目功能</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://forge-sage-leaf-able.grok.me" target="_blank" rel="noopener" data-title="石头剪刀布手势识别游戏开发">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-05</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>石头剪刀布手势识别游戏开发</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://sapphire-clover-forest-wind.grok.me" target="_blank" rel="noopener" data-title="通过手机识别物品电脑端计算的应用开发参考x帖子开源代码">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-06</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>通过手机识别物品电脑端计算的应用开发参考X帖子开源代码</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://vivid-palm-iris-vivid.grok.me" target="_blank" rel="noopener" data-title="手机前置后置摄像头识别人体骨骼模型">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-07</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>手机前置后置摄像头识别人体骨骼模型</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://ivory-amber-blend-wood.grok.me" target="_blank" rel="noopener" data-title="wi-fi心跳检测技术原理方法与手机应用可行性分析">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-08</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Wi-Fi心跳检测技术原理方法与手机应用可行性分析</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://topaz-monarch-blue-clear.grok.me" target="_blank" rel="noopener" data-title="眼睛里的光眼球反射重建应用">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-09</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>眼睛里的光眼球反射重建应用</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://eagle-bird-apple-crystal.grok.me" target="_blank" rel="noopener" data-title="小人真实互动游戏二次修改开发">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-10</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>小人真实互动游戏二次修改开发</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://spark-vivid-ocean-yarrow.grok.me" target="_blank" rel="noopener" data-title="手机ppg脉搏心率血氧监测app">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-11</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>手机PPG脉搏心率血氧监测App</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://zest-juniper-light-pepper.grok.me" target="_blank" rel="noopener" data-title="查找飞机发动机模型拆机互动演示代码">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-12</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>查找飞机发动机模型拆机互动演示代码</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://crane-meadow-bold-fern.grok.me" target="_blank" rel="noopener" data-title="手机教学识别系统用手机后置摄像头识别幻灯片胶片并转换3d模型">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-13</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>手机教学识别系统用手机后置摄像头识别幻灯片胶片并转换3D模型</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://dream-blaze-blaze-willow.grok.me" target="_blank" rel="noopener" data-title="mose3 3d 点轨迹预测与 horn 拟合">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-14</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>MoSE3 3D 点轨迹预测与 Horn 拟合</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://cliff-eagle-crystal-topaz.grok.me" target="_blank" rel="noopener" data-title="实时手机热成像手持显示">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-15</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>实时手机热成像手持显示</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://brick-cap-yonder-arch.grok.me" target="_blank" rel="noopener" data-title="查看x视频的影子游戏需求">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-16</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>查看X视频的影子游戏需求</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://birch-rose-lark-sage.grok.me" target="_blank" rel="noopener" data-title="3d dancer front camera mode">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-17</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>3D Dancer Front Camera Mode</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://drift-sail-bold-topaz.grok.me" target="_blank" rel="noopener" data-title="4d gaussian splatting mobile stream">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-18</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>4D Gaussian Splatting Mobile Stream</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://wind-marble-zenith-bird.grok.me" target="_blank" rel="noopener" data-title="jk beauty dance visualization in gork">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-19</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>JK Beauty Dance Visualization in Gork</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://solar-kite-slate-dove.grok.me" target="_blank" rel="noopener" data-title="laya-mlx tetris demo: 3d dynamic gameplay">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-20</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Laya-MLX Tetris Demo: 3D Dynamic Gameplay</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://fjord-gold-craft-finch.grok.me" target="_blank" rel="noopener" data-title="ai hand gesture drawing app">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-21</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>AI Hand Gesture Drawing App</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://bamboo-opal-acorn-wood.grok.me" target="_blank" rel="noopener" data-title="mobile camera ai app development">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-22</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Mobile Camera AI App Development</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://hill-quiet-reef-tiger.grok.me" target="_blank" rel="noopener" data-title="real-time gesture shooting game with fly swatting">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-23</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Real-time gesture shooting game with fly swatting</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://shale-blend-bay-shadow.grok.me" target="_blank" rel="noopener" data-title="gork app: 3d holographic cat interactions">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-24</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Gork App: 3D Holographic Cat Interactions</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://cedar-granite-terra-crisp.grok.me" target="_blank" rel="noopener" data-title="barcode scanner vr game">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-25</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Barcode scanner VR game</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://glow-arrow-drum-king.grok.me" target="_blank" rel="noopener" data-title="ai intelligent football prediction app">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-26</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>AI Intelligent Football Prediction App</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://sage-swift-breeze-urban.grok.me" target="_blank" rel="noopener" data-title="smartphone tomato recognition for agricultural analytics">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-27</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Smartphone Tomato Recognition for Agricultural Analytics</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://lion-mist-apple-birch.grok.me" target="_blank" rel="noopener" data-title="3d space scanner from video">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-28</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>3D Space Scanner from Video</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://acre-zephyr-glow-river.grok.me" target="_blank" rel="noopener" data-title="mobile camera corn health monitoring">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-29</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Mobile Camera Corn Health Monitoring</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://sunny-meadow-fleet-gold.grok.me" target="_blank" rel="noopener" data-title="tetris vibration sound control directions">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-30</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Tetris Vibration Sound Control Directions</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://glade-nova-wave-blue.grok.me" target="_blank" rel="noopener" data-title="6d姿态追踪手机摄像头项目教程">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-31</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>6D姿态追踪手机摄像头项目教程</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://heart-otter-maple-craft.grok.me" target="_blank" rel="noopener" data-title="ai cube app: 3d gesture tutorial">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-32</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>AI Cube App: 3D Gesture Tutorial</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://storm-flame-drift-willow.grok.me" target="_blank" rel="noopener" data-title="mobile front back cameras real-time interaction game">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-33</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Mobile front back cameras real-time interaction game</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://horizon-stone-berry-star.grok.me" target="_blank" rel="noopener" data-title="mobile camera ai for iv vascular guidance">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-34</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Mobile Camera AI for IV Vascular Guidance</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://hill-grove-lagoon-apex.grok.me" target="_blank" rel="noopener" data-title="人体骨骼实时识别应用">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-35</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>人体骨骼实时识别应用</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://fleet-arrow-cactus-shadow.grok.me" target="_blank" rel="noopener" data-title="multi-sensor fusion ar interaction">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-36</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Multi-Sensor Fusion AR Interaction</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://island-ruby-reef-quiet.grok.me" target="_blank" rel="noopener" data-title="ai-powered real watch tracker">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-37</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>AI-Powered Real Watch Tracker</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://sunny-zest-ocean-rapid.grok.me" target="_blank" rel="noopener" data-title="手指康复训练：摄像头手势识别">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-38</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>手指康复训练：摄像头手势识别</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://swift-orbit-civic-aurora.grok.me" target="_blank" rel="noopener" data-title="mobile phone music instrument app">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-39</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Mobile Phone Music Instrument App</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://tulip-bolt-bay-branch.grok.me" target="_blank" rel="noopener" data-title="手机后置摄像头gork应用">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-40</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>手机后置摄像头Gork应用</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://crisp-tulip-trail-crane.grok.me" target="_blank" rel="noopener" data-title="chalk person gesture dance project">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-41</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Chalk Person Gesture Dance Project</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://garden-arch-sage-flame.grok.me" target="_blank" rel="noopener" data-title="real-time object isolation using phone cameras">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-42</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Real-time object isolation using phone cameras</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://crane-green-craft-pearl.grok.me" target="_blank" rel="noopener" data-title="隔空画画：摄像头指尖绘画">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-43</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>隔空画画：摄像头指尖绘画</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://flora-fern-lark-brush.grok.me" target="_blank" rel="noopener" data-title="听路 hearpath 手机盲导">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-44</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>听路 HearPath 手机盲导</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://sky-royal-moon-lunar.grok.me" target="_blank" rel="noopener" data-title="蚊lock 手机应用教程">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-45</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>蚊LOCK 手机应用教程</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://spark-rose-rocket-eagle.grok.me" target="_blank" rel="noopener" data-title="lenscout: hidden camera detector">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-46</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Lenscout: Hidden Camera Detector</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://jolly-solar-fjord-otter.grok.me" target="_blank" rel="noopener" data-title="classgaze mobile classroom discipline">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-47</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>ClassGaze Mobile Classroom Discipline</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://velvet-cabin-arrow-yonder.grok.me" target="_blank" rel="noopener" data-title="eyeball-controlled quad drone game">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-48</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Eyeball-Controlled Quad Drone Game</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://spark-beam-rocket-topaz.grok.me" target="_blank" rel="noopener" data-title="消影：视频真抹物体">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-49</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>消影：视频真抹物体</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://lark-plaza-zinc-falcon.grok.me" target="_blank" rel="noopener" data-title="hazardlens: smartphone camera road hazard detector">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-50</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>HAZARDLENS: Smartphone Camera Road Hazard Detector</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://kite-branch-brick-storm.grok.me" target="_blank" rel="noopener" data-title="手机网页闪光灯主动深度点云">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-51</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>手机网页闪光灯主动深度点云</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://willow-arch-clear-sail.grok.me" target="_blank" rel="noopener" data-title="掌上汉王手写板">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-52</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>掌上汉王手写板</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://blend-scarlet-clear-lion.grok.me" target="_blank" rel="noopener" data-title="aero air mouse: phone gyro tracking">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-53</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Aero Air Mouse: Phone Gyro Tracking</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://kind-island-flame-dream.grok.me" target="_blank" rel="noopener" data-title="ai sop monitor app">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-54</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>AI SOP Monitor App</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://drift-quiet-prism-stone.grok.me" target="_blank" rel="noopener" data-title="holographic gesture robot dog app">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-55</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Holographic Gesture Robot Dog App</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://quiet-gem-pilot-bloom.grok.me" target="_blank" rel="noopener" data-title="manus gesture coding prototype">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-56</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Manus Gesture Coding Prototype</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://finch-cobalt-lotus-falcon.grok.me" target="_blank" rel="noopener" data-title="fj type: web hand tracking english typing">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-57</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>FJ Type: Web Hand Tracking English Typing</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://forge-glade-silver-mist.grok.me" target="_blank" rel="noopener" data-title="eyeson: real-time object detection">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-58</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>EyesOn: Real-Time Object Detection</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                        <a class="wall-card" href="https://bird-orbit-coral-moon.grok.me" target="_blank" rel="noopener" data-title="elder fall detection on mobile camera">
+                            <span class="wall-card-head">
+                                <span class="dwg-id">DWG 03-59</span>
+                                <span class="status">GROK / 已发布</span>
+                            </span>
+                            <span class="wall-card-body">
+                                <strong>Elder Fall Detection on Mobile Camera</strong>
+                                <span class="wall-open">打开应用</span>
+                            </span>
+                        </a>
+                    </div>
+                    <p class="wall-empty" id="grok-app-empty" hidden>没有名称匹配的应用。</p>
+                </div>
+            </section>
+
+            <section id="knowledge">
+                <div class="wrap">
+                    <div class="sec-head">
+                        <span class="fig">04</span>
                         <h2>实验页</h2>
                         <span class="sec-en">LAB PAGES</span>
                     </div>
@@ -735,7 +1435,7 @@
                             <span>ITEM</span><span>图名 / 说明</span><span>查阅</span>
                         </div>
                         <a class="bom-row" href="https://bigcow2018.github.io/fengshanceshi/" target="_blank" rel="noopener">
-                            <span class="bom-no">03-01</span>
+                            <span class="bom-no">04-01</span>
                             <span>
                                 <strong>风扇动平衡测试</strong>
                                 <span class="bom-desc">将手机竖放固定，用振动与麦克风采样做风扇动平衡监测示意：先标定基线，再根据振动或声音变化给出 OK / NG 提示。</span>
@@ -743,7 +1443,7 @@
                             <span class="bom-open">打开</span>
                         </a>
                         <a class="bom-row" href="https://bigcow2018.github.io/cichangcesiv2/" target="_blank" rel="noopener">
-                            <span class="bom-no">03-02</span>
+                            <span class="bom-no">04-02</span>
                             <span>
                                 <strong>磁场监测</strong>
                                 <span class="bom-desc">读取设备磁力计，显示合成磁场 |B|、相对零点变化和三轴分量曲线。需在支持 Generic Sensor 的 Chrome 中以 HTTPS 打开。</span>
@@ -751,7 +1451,7 @@
                             <span class="bom-open">打开</span>
                         </a>
                         <a class="bom-row" href="https://bigcow2018.github.io/PPGceshi/" target="_blank" rel="noopener">
-                            <span class="bom-no">03-03</span>
+                            <span class="bom-no">04-03</span>
                             <span>
                                 <strong>PPG 心率示意</strong>
                                 <span class="bom-desc">用后置摄像头读取画面红色分量，示意光电容积脉搏波并估算 BPM。页面标明非医疗用途，结果受按压、光线和设备影响。</span>
@@ -759,7 +1459,7 @@
                             <span class="bom-open">打开</span>
                         </a>
                         <a class="bom-row" href="https://bigcow2018.github.io/shoushi/" target="_blank" rel="noopener">
-                            <span class="bom-no">03-04</span>
+                            <span class="bom-no">04-04</span>
                             <span>
                                 <strong>手部骨骼 · 丝绸物理</strong>
                                 <span class="bom-desc">网络摄像头实时 21 点手部骨骼，叠加以指尖为跟随目标的丝绸飘带物理效果，基于 MediaPipe 手部模型。</span>
@@ -773,7 +1473,7 @@
             <section id="tools">
                 <div class="wrap">
                     <div class="sec-head">
-                        <span class="fig">04</span>
+                        <span class="fig">05</span>
                         <h2>工具</h2>
                         <span class="sec-en">TOOLS</span>
                     </div>
@@ -808,7 +1508,7 @@
             <section id="contact">
                 <div class="wrap">
                     <div class="sec-head">
-                        <span class="fig">05</span>
+                        <span class="fig">06</span>
                         <h2>联系</h2>
                         <span class="sec-en">CONTACT</span>
                     </div>
@@ -831,9 +1531,10 @@
                 <ul class="footer-links">
                     <li><a href="#about">01 关于</a></li>
                     <li><a href="#projects">02 项目</a></li>
-                    <li><a href="#knowledge">03 实验</a></li>
-                    <li><a href="#tools">04 工具</a></li>
-                    <li><a href="#contact">05 联系</a></li>
+                    <li><a href="#grok-apps">03 应用墙</a></li>
+                    <li><a href="#knowledge">04 实验</a></li>
+                    <li><a href="#tools">05 工具</a></li>
+                    <li><a href="#contact">06 联系</a></li>
                     <li><a href="https://github.com/bigcow2018" target="_blank" rel="noopener">GitHub</a></li>
                 </ul>
                 <div class="tb">
@@ -847,7 +1548,7 @@
                     </div>
                     <div>
                         <span class="tb-label">REV / DATE</span>
-                        A &nbsp;/&nbsp; 2026
+                        B &nbsp;/&nbsp; 2026
                     </div>
                     <div class="tb-quote">“哪怕现在没人访问，十年以后回头看，它也可能成为你最珍贵的数字资产。”</div>
                 </div>
@@ -861,6 +1562,30 @@
                 if (toggle) toggle.checked = false;
             });
         });
+        (function () {
+            var input = document.getElementById('grok-app-filter');
+            var wall = document.getElementById('grok-app-wall');
+            var count = document.getElementById('grok-app-count');
+            var empty = document.getElementById('grok-app-empty');
+            if (!input || !wall) return;
+            var cards = wall.querySelectorAll('.wall-card');
+            var total = cards.length;
+            function apply() {
+                var q = (input.value || '').trim().toLowerCase();
+                var n = 0;
+                for (var i = 0; i < cards.length; i++) {
+                    var card = cards[i];
+                    var hay = (card.getAttribute('data-title') || '') + ' ' + (card.querySelector('.dwg-id') || {}).textContent;
+                    hay = String(hay).toLowerCase();
+                    var show = !q || hay.indexOf(q) !== -1;
+                    card.hidden = !show;
+                    if (show) n++;
+                }
+                if (count) count.textContent = n + ' / ' + total;
+                if (empty) empty.hidden = n !== 0;
+            }
+            input.addEventListener('input', apply);
+        })();
     </script>
 </body>
 </html>
