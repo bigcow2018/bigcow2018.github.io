@@ -1,4 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="8" fill="#2563eb"/>
-  <text x="16" y="23" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff" font-family="system-ui, 'Noto Sans SC', 'PingFang SC', sans-serif">任</text>
+  <rect width="32" height="32" fill="#e3dccb"/>
+  <rect x="1.5" y="1.5" width="29" height="29" fill="none" stroke="#184272" stroke-width="1.4"/>
+  <rect x="3.5" y="3.5" width="25" height="25" fill="none" stroke="#184272" stroke-width="0.6"/>
+  <path d="M8 4 v24 M16 4 v24 M24 4 v24 M4 8 h24 M4 16 h24 M4 24 h24" stroke="#184272" stroke-width="0.35" opacity="0.35"/>
+  <text x="16" y="21.2" text-anchor="middle" font-size="13" font-weight="700" fill="#184272" font-family="system-ui, 'Noto Sans SC', sans-serif">任</text>
+  <rect x="0" y="0" width="5" height="2.2" fill="#7c451d"/>
+  <rect x="0" y="0" width="2.2" height="5" fill="#7c451d"/>
+  <rect x="27" y="0" width="5" height="2.2" fill="#7c451d"/>
+  <rect x="29.8" y="0" width="2.2" height="5" fill="#7c451d"/>
+  <rect x="0" y="29.8" width="5" height="2.2" fill="#7c451d"/>
+  <rect x="0" y="27" width="2.2" height="5" fill="#7c451d"/>
+  <rect x="27" y="29.8" width="5" height="2.2" fill="#7c451d"/>
+  <rect x="29.8" y="27" width="2.2" height="5" fill="#7c451d"/>
 </svg>

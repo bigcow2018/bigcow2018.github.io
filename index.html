@@ -7,8 +7,8 @@
     <meta name="description" content="任瑞的个人网站，机械设计实践者。公开项目包括机械制图识图辅助、机器狗手势交互、手机 IMU 实验，以及数智化实践教学探索。">
     <link rel="canonical" href="https://bigcow2018.github.io/">
     <link rel="icon" href="https://bigcow2018.github.io/assets/favicon.svg" type="image/svg+xml">
-    <link rel="icon" href="https://bigcow2018.github.io/assets/avatar.png" type="image/png">
-    <link rel="apple-touch-icon" href="https://bigcow2018.github.io/assets/avatar.png">
+    <link rel="icon" href="https://bigcow2018.github.io/assets/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://bigcow2018.github.io/assets/favicon.png">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="zh_CN">
     <meta property="og:url" content="https://bigcow2018.github.io/">
@@ -20,45 +20,159 @@
     <meta name="twitter:description" content="任瑞的个人网站。公开项目包括机械制图识图辅助、机器狗手势交互、手机 IMU 实验，以及数智化实践教学探索。">
     <meta name="twitter:image" content="https://bigcow2018.github.io/assets/og.png">
     <style>
+        @font-face {
+            font-family: "IBM Plex Sans";
+            src: url("assets/fonts/IBMPlexSans-Regular.woff2") format("woff2");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "IBM Plex Sans";
+            src: url("assets/fonts/IBMPlexSans-SemiBold.woff2") format("woff2");
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "IBM Plex Mono";
+            src: url("assets/fonts/IBMPlexMono-Regular.woff2") format("woff2");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Noto Sans SC Subset";
+            src: url("assets/fonts/NotoSansSC-Regular-subset.woff2") format("woff2");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Noto Sans SC Subset";
+            src: url("assets/fonts/NotoSansSC-Bold-subset.woff2") format("woff2");
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
         :root {
-            --bg: #f8f9fa;
-            --surface: #ffffff;
-            --text: #1a1a1a;
-            --text-muted: #5a5a5a;
-            --accent: #2563eb;
-            --accent-hover: #1d4ed8;
-            --border: #e5e7eb;
-            --shadow: 0 4px 20px rgba(0,0,0,0.06);
-            --radius: 12px;
+            --paper: #e3dccb;
+            --sheet: #efe8d6;
+            --ink: #1a1813;
+            --ink-soft: #4d483c;
+            --blueprint: #184272;
+            --blueprint-deep: #102e54;
+            --copper: #7c451d;
+            --steel: #2c4548;
+            --line: #b3aa94;
+            --line-strong: #1a1813;
+            --grid: rgba(24, 66, 114, 0.08);
+            --grid-strong: rgba(24, 66, 114, 0.14);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body {
-            font-family: system-ui, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            font-family: "IBM Plex Sans", "Noto Sans SC Subset", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+            background: var(--paper);
+            color: var(--ink);
             line-height: 1.7;
             font-weight: 400;
+            font-size: 17px;
         }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .mono, .fig, .anno, .dwg-id, .status, .bom-no, .kicker, .plate-caption, .sec-en, .tb-label {
+            font-family: "IBM Plex Mono", "Noto Sans SC Subset", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+        }
+        a { color: var(--blueprint); text-underline-offset: 3px; }
+        a:hover { color: var(--blueprint-deep); }
+        a:focus-visible, .nav-toggle:focus-visible, .nav-toggle-input:focus-visible + .nav-toggle, button:focus-visible {
+            outline: 2px solid var(--copper);
+            outline-offset: 3px;
+        }
+        .skip {
+            position: absolute;
+            left: -999px;
+            top: 0;
+            background: var(--sheet);
+            color: var(--ink);
+            padding: 8px 12px;
+            z-index: 200;
+        }
+        .skip:focus { left: 16px; top: 16px; }
+
+        /* Page as a drawing sheet */
+        .frame {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin: 14px;
+            min-height: calc(100vh - 28px);
+            background-color: var(--sheet);
+            background-image:
+                linear-gradient(var(--grid-strong) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-strong) 1px, transparent 1px),
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 96px 96px, 96px 96px, 16px 16px, 16px 16px;
+            background-position: -1px -1px;
+            border: 1.5px solid var(--ink);
+        }
+        .frame::before {
+            content: "";
+            position: absolute;
+            inset: 6px;
+            border: 1px solid var(--ink);
+            pointer-events: none;
+            z-index: 5;
+        }
+        .corners span {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            z-index: 6;
+            pointer-events: none;
+        }
+        .corners .tl { top: -1px; left: -1px; border-top: 3px solid var(--copper); border-left: 3px solid var(--copper); }
+        .corners .tr { top: -1px; right: -1px; border-top: 3px solid var(--copper); border-right: 3px solid var(--copper); }
+        .corners .bl { bottom: -1px; left: -1px; border-bottom: 3px solid var(--copper); border-left: 3px solid var(--copper); }
+        .corners .br { bottom: -1px; right: -1px; border-bottom: 3px solid var(--copper); border-right: 3px solid var(--copper); }
+
+        .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
 
         /* Nav */
         nav {
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(248,249,250,0.92);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: rgba(239, 232, 214, 0.94);
+            border-bottom: 1px solid var(--ink);
         }
         .nav-inner {
-            display: flex; justify-content: space-between; align-items: center;
-            height: 68px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 64px;
             position: relative;
+            gap: 16px;
         }
         .logo {
-            font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em;
-            text-decoration: none; color: var(--text);
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--ink);
+            min-height: 44px;
+            padding: 8px 0;
         }
-        .logo span { color: var(--accent); }
+        .logo .dwg-id {
+            color: var(--copper);
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+        }
+        .logo strong {
+            font-weight: 600;
+            font-size: 1.05rem;
+            letter-spacing: 0.08em;
+        }
         .nav-toggle-input {
             position: absolute;
             opacity: 0;
@@ -75,433 +189,671 @@
             flex-direction: column;
             gap: 5px;
             cursor: pointer;
-            border-radius: 8px;
+            border: 1px solid var(--ink);
+            background: var(--sheet);
         }
         .nav-toggle span {
             display: block;
-            width: 22px;
-            height: 2px;
-            background: var(--text);
-            border-radius: 1px;
+            width: 18px;
+            height: 1.5px;
+            background: var(--ink);
         }
-        .nav-links { display: flex; gap: 28px; list-style: none; }
-        .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 500; font-size: 0.95rem; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--accent); }
+        .nav-links { display: flex; gap: 4px 22px; list-style: none; flex-wrap: wrap; justify-content: flex-end; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--ink);
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: baseline;
+            gap: 6px;
+            min-height: 44px;
+            align-items: center;
+        }
+        .nav-links a .n { color: var(--copper); font-size: 0.7rem; letter-spacing: 0.06em; }
+        .nav-links a:hover { color: var(--blueprint); }
 
         /* Hero */
-        .hero {
-            padding: 100px 0 80px;
-            text-align: center;
+        .hero { padding: 56px 0 64px; }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 48px;
+            align-items: center;
         }
-        .hero-avatar {
-            width: 120px;
-            height: 120px;
+        .nameplate {
+            justify-self: start;
+            transform: rotate(-2.2deg);
+            width: 200px;
+        }
+        .plate {
+            border: 2px solid var(--ink);
+            background: var(--paper);
+            padding: 10px;
+            position: relative;
+            box-shadow: 3px 3px 0 var(--ink);
+        }
+        .plate::before, .plate::after {
+            content: "";
+            position: absolute;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 24px;
-            display: block;
-            background: #fff;
-            border: 3px solid #fff;
-            box-shadow: var(--shadow);
+            background: var(--copper);
+            border: 1px solid var(--ink);
         }
-        .hero-badge {
-            display: inline-block;
-            background: #eff6ff;
-            color: var(--accent);
-            padding: 6px 14px;
-            border-radius: 999px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 20px;
+        .plate::before { top: 6px; left: 6px; }
+        .plate::after { top: 6px; right: 6px; }
+        .plate .rivets-b {
+            position: absolute;
+            left: 6px;
+            right: 6px;
+            bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+        .plate .rivets-b i {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--copper);
+            border: 1px solid var(--ink);
+            display: block;
+        }
+        .plate img {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border: 1px solid var(--ink);
+            background: #d8d3c4;
+        }
+        .plate-caption {
+            margin-top: 8px;
+            text-align: center;
+            font-size: 0.68rem;
+            letter-spacing: 0.14em;
+            color: var(--copper);
+        }
+        .kicker {
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            color: var(--copper);
+            margin-bottom: 14px;
         }
         .hero h1 {
-            font-size: clamp(2.4rem, 5vw, 3.6rem);
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            line-height: 1.15;
-            margin-bottom: 20px;
+            font-size: clamp(3.1rem, 8vw, 5.2rem);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            line-height: 1.05;
+            margin-bottom: 8px;
         }
-        .hero h1 span { color: var(--accent); }
-        .hero p {
-            font-size: 1.15rem;
-            color: var(--text-muted);
-            max-width: 640px;
-            margin: 0 auto 32px;
+        .role {
+            font-size: 1.35rem;
+            color: var(--blueprint);
+            font-weight: 600;
+            margin-bottom: 18px;
+            letter-spacing: 0.12em;
         }
-        .btn {
-            display: inline-block;
-            background: var(--accent);
-            color: white;
-            padding: 12px 28px;
-            border-radius: 8px;
+        .lead {
+            font-size: 1.05rem;
+            color: var(--ink-soft);
+            max-width: 38em;
+            margin-bottom: 28px;
+        }
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 12px 20px; }
+        .ref-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             text-decoration: none;
-            font-weight: 500;
-            transition: background 0.2s, transform 0.15s;
+            color: var(--ink);
+            border: 1px solid var(--ink);
+            padding: 10px 16px;
+            min-height: 44px;
+            font-size: 0.95rem;
+            background: var(--sheet);
         }
-        .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
-        .btn-secondary {
-            background: transparent;
-            color: var(--text);
-            border: 1px solid var(--border);
-            margin-left: 12px;
+        .ref-link .n { color: var(--copper); font-size: 0.72rem; letter-spacing: 0.08em; }
+        .ref-link:hover { background: var(--paper); color: var(--blueprint-deep); }
+        .ref-link.solid {
+            background: var(--blueprint);
+            color: var(--sheet);
+            border-color: var(--blueprint-deep);
         }
-        .btn-secondary:hover { background: #f3f4f6; }
+        .ref-link.solid .n { color: #d7c4a4; }
+        .ref-link.solid:hover { background: var(--blueprint-deep); color: var(--sheet); }
 
         /* Sections */
-        section { padding: 80px 0; }
-        section h2 {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 12px;
+        section { padding: 16px 0 56px; }
+        .sec-head {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: end;
+            gap: 12px 16px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 8px;
         }
-        .section-sub { color: var(--text-muted); margin-bottom: 48px; font-size: 1.05rem; }
+        .sec-head .fig {
+            font-size: 1.35rem;
+            color: var(--copper);
+            letter-spacing: 0.08em;
+            line-height: 1;
+            padding-bottom: 2px;
+        }
+        .sec-head h2 {
+            font-size: 1.55rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            line-height: 1.2;
+        }
+        .sec-en {
+            font-size: 0.72rem;
+            letter-spacing: 0.14em;
+            color: var(--ink-soft);
+            padding-bottom: 4px;
+        }
 
-        /* About */
         .about-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 48px;
-            align-items: start;
+            gap: 0;
+            border: 1px solid var(--ink);
+            background: rgba(239, 232, 214, 0.65);
         }
-        .about-card {
-            background: var(--surface);
-            padding: 32px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+        .about-col { padding: 24px 26px; }
+        .about-col + .about-col { border-left: 1px solid var(--ink); }
+        .about-col h3 {
+            font-size: 1.02rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 0.08em;
         }
-        .about-card h3 { margin-bottom: 12px; font-size: 1.25rem; }
-        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+        .about-col p { color: var(--ink); }
+        .subnote {
+            margin-bottom: 16px;
+            color: var(--ink-soft);
+            font-size: 0.98rem;
+        }
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
         .tag {
-            background: #f1f5f9;
-            color: #334155;
-            padding: 4px 12px;
-            border-radius: 999px;
-            font-size: 0.85rem;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            color: var(--steel);
+            border: 1px solid var(--line);
+            padding: 4px 8px;
+            font-family: "IBM Plex Mono", "Noto Sans SC Subset", ui-monospace, monospace;
         }
 
-        /* Projects */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
         }
-        .project-card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.25s, box-shadow 0.25s;
+        .dwg-card {
+            border: 1px solid var(--ink);
+            background: var(--sheet);
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
         }
-        .project-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(0,0,0,0.1); }
-        .project-img {
-            height: 180px;
-            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 3rem;
+        .dwg-card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px solid var(--ink);
+            padding: 8px 14px;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
         }
-        .project-body { padding: 24px; }
-        .project-body h3 { margin-bottom: 8px; font-size: 1.15rem; }
-        .project-body p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 16px; }
-        .project-links { display: flex; flex-wrap: wrap; gap: 16px; }
-        .project-link { color: var(--accent); font-weight: 500; text-decoration: none; font-size: 0.9rem; }
-        .project-link:hover { text-decoration: underline; }
-        .project-soon {
-            color: var(--text-muted);
-            font-weight: 500;
-            font-size: 0.9rem;
+        .dwg-card-head .dwg-id { color: var(--copper); }
+        .dwg-card-head .status { color: var(--ink-soft); text-align: right; }
+        .dwg-card-body { padding: 16px 16px 18px; flex: 1; display: flex; flex-direction: column; }
+        .dwg-card h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            margin-bottom: 8px;
+            line-height: 1.35;
         }
+        .dwg-card p { color: var(--ink-soft); font-size: 0.95rem; margin-bottom: 16px; flex: 1; }
+        .dwg-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            align-items: center;
+            font-size: 0.85rem;
+            border-top: 1px dashed var(--line);
+            padding-top: 12px;
+        }
+        .src { color: var(--ink-soft); font-size: 0.8rem; }
+        .project-soon { color: var(--ink-soft); font-size: 0.85rem; }
+        .dwg-meta a { font-weight: 600; text-decoration: none; }
+        .dwg-meta a:hover { text-decoration: underline; }
 
-        /* Knowledge */
-        .kb-list { display: flex; flex-direction: column; gap: 16px; }
-        .kb-item {
-            background: var(--surface);
-            padding: 20px 24px;
-            border-radius: var(--radius);
-            border-left: 4px solid var(--accent);
-            box-shadow: var(--shadow);
+        .bom { border: 1px solid var(--ink); background: rgba(239, 232, 214, 0.65); }
+        .bom-head, .bom-row {
+            display: grid;
+            grid-template-columns: 72px 1fr auto;
+            gap: 12px;
+            padding: 12px 16px;
+            align-items: start;
+        }
+        .bom-head {
+            border-bottom: 1px solid var(--ink);
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            color: var(--ink-soft);
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+        .bom-row {
             text-decoration: none;
             color: inherit;
-            display: block;
-            transition: transform 0.2s, box-shadow 0.2s;
+            border-top: 1px solid var(--line);
+            min-height: 44px;
         }
-        .kb-item:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.08); }
-        .kb-item h3 { margin-bottom: 6px; font-size: 1.05rem; }
-        .kb-item p { color: var(--text-muted); font-size: 0.95rem; }
+        .bom-row:first-of-type { border-top: 0; }
+        .bom-row:hover { background: rgba(227, 220, 203, 0.8); }
+        .bom-no { color: var(--copper); font-size: 0.78rem; letter-spacing: 0.06em; padding-top: 3px; }
+        .bom-row strong { display: block; font-weight: 600; color: var(--ink); }
+        .bom-desc { display: block; color: var(--ink-soft); font-size: 0.9rem; margin-top: 2px; }
+        .bom-open { color: var(--blueprint); font-size: 0.85rem; font-weight: 600; padding-top: 3px; white-space: nowrap; }
 
-        /* Tools / Nav */
-        .tools-grid {
+        .tools-table { border: 1px solid var(--ink); background: rgba(239, 232, 214, 0.65); }
+        .tool-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
+            grid-template-columns: 140px 1fr;
+            gap: 12px;
+            padding: 14px 16px;
+            min-height: 44px;
+            align-items: center;
         }
-        .tool-card {
-            background: var(--surface);
-            padding: 20px;
-            border-radius: var(--radius);
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: transform 0.2s;
-        }
-        .tool-card:hover { transform: translateY(-4px); }
-        .tool-card .icon { font-size: 2rem; margin-bottom: 8px; }
-        .tool-card h3 { font-size: 1rem; margin-bottom: 8px; }
-        .tool-card p, .tool-card .tool-links { font-size: 0.85rem; color: var(--text-muted); }
-        .tool-card a { color: var(--accent); text-decoration: none; }
-        .tool-card a:hover { text-decoration: underline; }
+        .tool-row + .tool-row { border-top: 1px solid var(--line); }
+        .tool-row h3 { font-size: 0.95rem; font-weight: 600; letter-spacing: 0.08em; }
+        .tool-row a { text-decoration: none; margin-right: 4px; }
+        .tool-row a:hover { text-decoration: underline; }
+        .sep { color: var(--line); margin: 0 6px; }
 
-        /* Contact */
         .contact-box {
-            background: var(--surface);
-            padding: 48px;
-            border-radius: var(--radius);
-            text-align: center;
-            box-shadow: var(--shadow);
+            border: 1px solid var(--ink);
+            background: rgba(239, 232, 214, 0.65);
+            padding: 28px 26px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 24px;
+            align-items: center;
         }
-        .contact-box p { color: var(--text-muted); margin-bottom: 24px; }
-        .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
-        .contact-actions .btn-secondary { margin-left: 0; }
+        .contact-box p { color: var(--ink-soft); max-width: 36em; margin-top: 8px; }
+        .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 
-        footer {
-            padding: 40px 0;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--border);
+        footer.title-block { padding: 0 0 28px; margin-top: auto; }
+        .tb {
+            border: 1px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1.1fr 1.6fr 0.9fr;
+            background: var(--sheet);
+        }
+        .tb div { padding: 10px 14px; }
+        .tb div + div { border-left: 1px solid var(--ink); }
+        .tb-label {
+            display: block;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            color: var(--copper);
+            margin-bottom: 2px;
+        }
+        .tb-quote {
+            grid-column: 1 / -1;
+            border-top: 1px solid var(--ink);
+            color: var(--ink-soft);
+            font-size: 0.88rem;
         }
         .footer-links {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 20px;
-            list-style: none; margin-bottom: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 18px;
+            list-style: none;
+            margin-bottom: 14px;
         }
-        .footer-links a { color: var(--text-muted); text-decoration: none; font-weight: 500; }
-        .footer-links a:hover { color: var(--accent); }
-
-        a:focus-visible, .nav-toggle:focus-visible, .nav-toggle-input:focus-visible + .nav-toggle {
-            outline: 2px solid var(--accent);
-            outline-offset: 3px;
+        .footer-links a {
+            color: var(--ink-soft);
+            text-decoration: none;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.88rem;
         }
+        .footer-links a:hover { color: var(--blueprint); }
 
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
-            .project-card, .kb-item, .tool-card, .btn { transition: none; }
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 800px) {
+            body { font-size: 16px; }
+            .frame { margin: 8px; min-height: calc(100vh - 16px); }
+            .frame::before { inset: 4px; }
+            .wrap { padding: 0 16px; }
             .nav-toggle { display: flex; }
             .nav-links {
                 display: none;
                 position: absolute;
-                top: 68px;
-                left: 0;
-                right: 0;
+                top: 64px;
+                left: -16px;
+                right: -16px;
                 flex-direction: column;
                 gap: 0;
-                background: rgba(248,249,250,0.98);
-                border-bottom: 1px solid var(--border);
-                padding: 8px 0 16px;
-                box-shadow: var(--shadow);
+                background: var(--sheet);
+                border-bottom: 1px solid var(--ink);
+                border-top: 1px solid var(--ink);
+                padding: 6px 16px 10px;
             }
-            .nav-links li a { display: block; padding: 12px 24px; }
+            .nav-links a { width: 100%; }
             #nav-toggle:checked ~ .nav-links { display: flex; }
-            .about-grid { grid-template-columns: 1fr; }
-            .hero { padding: 70px 0 50px; }
-            section { padding: 60px 0; }
-            .btn-secondary { margin-left: 0; margin-top: 0; }
-            .hero .btn-secondary { display: inline-block; margin-top: 12px; }
-            .contact-box { padding: 32px 20px; }
+            .hero { padding: 32px 0 40px; }
+            .hero-grid { grid-template-columns: 1fr; gap: 24px; }
+            .nameplate { transform: none; width: 132px; }
+            .hero h1 { font-size: clamp(2.6rem, 14vw, 3.6rem); }
+            .role { letter-spacing: 0.06em; }
+            .sec-head { grid-template-columns: auto 1fr; }
+            .sec-en { display: none; }
+            .about-grid, .projects-grid { grid-template-columns: 1fr; }
+            .about-col + .about-col { border-left: 0; border-top: 1px solid var(--ink); }
+            .bom-head { display: none; }
+            .bom-head, .bom-row { grid-template-columns: 56px 1fr auto; gap: 8px; padding: 12px; }
+            .tool-row { grid-template-columns: 1fr; gap: 4px; }
+            .contact-box { grid-template-columns: 1fr; padding: 20px 16px; }
+            .tb { grid-template-columns: 1fr; }
+            .tb div + div { border-left: 0; border-top: 1px solid var(--ink); }
+            .tb-quote { grid-column: auto; }
         }
     </style>
 </head>
 <body>
-    <nav>
-        <div class="container nav-inner">
-            <a href="/" class="logo">数字<span>土地</span></a>
-            <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
-            <label for="nav-toggle" class="nav-toggle" aria-label="打开或关闭菜单">
-                <span></span><span></span><span></span>
-            </label>
-            <ul class="nav-links">
-                <li><a href="#about">关于</a></li>
-                <li><a href="#projects">项目</a></li>
-                <li><a href="#knowledge">实验页</a></li>
-                <li><a href="#tools">工具</a></li>
-                <li><a href="#contact">联系</a></li>
-            </ul>
+    <a class="skip" href="#main">跳到正文</a>
+    <div class="frame">
+        <div class="corners" aria-hidden="true">
+            <span class="tl"></span><span class="tr"></span>
+            <span class="bl"></span><span class="br"></span>
         </div>
-    </nav>
 
-    <header class="hero">
-        <div class="container">
-            <img class="hero-avatar" src="assets/avatar.png" width="120" height="120" alt="任瑞的 GitHub 头像">
-            <div class="hero-badge">机械设计 · 实验与可视化</div>
-            <h1>你好，我是<br><span>任瑞</span></h1>
-            <p>机械设计实践者。我做机电实验页、机械制图识图辅助和机器狗手势交互，也在探索数智化实践教学。</p>
-            <a href="#projects" class="btn">查看项目</a>
-            <a href="#contact" class="btn btn-secondary">联系我</a>
-        </div>
-    </header>
-
-    <section id="about">
-        <div class="container">
-            <h2>关于我</h2>
-            <p class="section-sub">任瑞，机械设计实践者，关注机电实验、交互式可视化与实践教学。</p>
-            <div class="about-grid">
-                <div class="about-card">
-                    <h3>正在做的事</h3>
-                    <p>从事机械设计工作，并在网页上做可交互的实验与教学辅助工具。已公开的实践包括机械制图识图辅助、摄像头上手势驱动的机器狗画面，以及手机 IMU、磁场、风扇动平衡等传感器实验页。</p>
-                    <div class="tags">
-                        <span class="tag">机械设计</span>
-                        <span class="tag">实践教学</span>
-                        <span class="tag">机电实验</span>
-                        <span class="tag">可视化</span>
-                    </div>
-                </div>
-                <div class="about-card">
-                    <h3>为什么做这个网站</h3>
-                    <p>社交平台的内容可见性由算法决定。个人网站让我可以自己决定内容、结构与展示方式。课程笔记、项目记录、作品集……十年后回头看，它可能成为最珍贵的数字资产。</p>
-                </div>
+        <nav>
+            <div class="wrap nav-inner">
+                <a href="/" class="logo">
+                    <span class="dwg-id">DWG A-00</span>
+                    <strong>数字土地</strong>
+                </a>
+                <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
+                <label for="nav-toggle" class="nav-toggle" aria-label="打开或关闭菜单">
+                    <span></span><span></span><span></span>
+                </label>
+                <ul class="nav-links">
+                    <li><a href="#about"><span class="n mono">01</span>关于</a></li>
+                    <li><a href="#projects"><span class="n mono">02</span>项目</a></li>
+                    <li><a href="#knowledge"><span class="n mono">03</span>实验</a></li>
+                    <li><a href="#tools"><span class="n mono">04</span>工具</a></li>
+                    <li><a href="#contact"><span class="n mono">05</span>联系</a></li>
+                </ul>
             </div>
-        </div>
-    </section>
+        </nav>
 
-    <section id="projects" style="background:#f1f5f9;">
-        <div class="container">
-            <h2>项目展示</h2>
-            <p class="section-sub">从公开实践里选出的四个代表项目</p>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-img">📚</div>
-                    <div class="project-body">
-                        <h3>数智化实践教学管理平台</h3>
-                        <p>面向实践教学的管理平台。已规划四期演示：SaaS，以及减速器拆装 / 砂型铸造、手机立体教材、齿轮范成仪。</p>
-                        <span class="project-soon">介绍即将发布</span>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-img">📐</div>
-                    <div class="project-body">
-                        <h3>机械制图识图辅助</h3>
-                        <p>手机端看图学习工具，对应教材第 5～8 章与附录。支持对书本或图纸拍照提取线框与圆孔示意，并提供章节图册和机构示意动画。明确用于识图学习，不是自动出图或精密测量。</p>
-                        <div class="project-links">
-                            <a class="project-link" href="https://bigcow2018.github.io/jixiezhitu/" target="_blank" rel="noopener">打开演示 →</a>
-                            <a class="project-link" href="https://github.com/bigcow2018/jixiezhitu" target="_blank" rel="noopener">GitHub</a>
+        <main id="main">
+            <header class="hero">
+                <div class="wrap hero-grid">
+                    <figure class="nameplate">
+                        <div class="plate">
+                            <img src="assets/avatar.png" width="160" height="160" alt="任瑞的 GitHub 头像">
+                            <div class="rivets-b" aria-hidden="true"><i></i><i></i></div>
+                        </div>
+                        <figcaption class="plate-caption">STAMP · 数字土地</figcaption>
+                    </figure>
+                    <div class="hero-copy">
+                        <p class="kicker">FIG. 00 &nbsp;/&nbsp; COVER SHEET &nbsp;/&nbsp; 个人站点</p>
+                        <h1>任瑞</h1>
+                        <p class="role">机械设计实践者</p>
+                        <p class="lead">我做机电实验页、机械制图识图辅助和机器狗手势交互，也在探索数智化实践教学。</p>
+                        <div class="hero-actions">
+                            <a href="#projects" class="ref-link solid"><span class="n mono">02</span>查看项目</a>
+                            <a href="#contact" class="ref-link"><span class="n mono">05</span>联系我</a>
                         </div>
                     </div>
                 </div>
-                <div class="project-card">
-                    <div class="project-img">🤖</div>
-                    <div class="project-body">
-                        <h3>机器狗 · 手势场</h3>
-                        <p>打开前置摄像头，用 MediaPipe 做 21 点手指追踪，把机器狗画面叠在实景上。比出 1 / 2 / 3 / 4 或左右摇手，可切换抬腿欢迎、后空翻、跳跃等动作演示。</p>
-                        <div class="project-links">
-                            <a class="project-link" href="https://bigcow2018.github.io/dog-cam/" target="_blank" rel="noopener">打开演示 →</a>
-                            <a class="project-link" href="https://github.com/bigcow2018/dog-cam" target="_blank" rel="noopener">GitHub</a>
+            </header>
+
+            <section id="about">
+                <div class="wrap">
+                    <div class="sec-head">
+                        <span class="fig">01</span>
+                        <h2>关于</h2>
+                        <span class="sec-en">ABOUT</span>
+                    </div>
+                    <p class="subnote">任瑞，机械设计实践者，关注机电实验、交互式可视化与实践教学。</p>
+                    <div class="about-grid">
+                        <div class="about-col">
+                            <h3>正在做的事</h3>
+                            <p>从事机械设计工作，并在网页上做可交互的实验与教学辅助工具。已公开的实践包括机械制图识图辅助、摄像头上手势驱动的机器狗画面，以及手机 IMU、磁场、风扇动平衡等传感器实验页。</p>
+                            <div class="tags">
+                                <span class="tag">机械设计</span>
+                                <span class="tag">实践教学</span>
+                                <span class="tag">机电实验</span>
+                                <span class="tag">可视化</span>
+                            </div>
+                        </div>
+                        <div class="about-col">
+                            <h3>为什么做这个网站</h3>
+                            <p>社交平台的内容可见性由算法决定。个人网站让我可以自己决定内容、结构与展示方式。课程笔记、项目记录、作品集……十年后回头看，它可能成为最珍贵的数字资产。</p>
                         </div>
                     </div>
                 </div>
-                <div class="project-card">
-                    <div class="project-img">📱</div>
-                    <div class="project-body">
-                        <h3>IMU Sensor Pro Lab</h3>
-                        <p>手机端 IMU 实验页。读取加速度与姿态（Pitch / Roll / Yaw），用曲线图和 3D 模型同步显示设备运动。</p>
-                        <div class="project-links">
-                            <a class="project-link" href="https://project-yjzuk.vercel.app/" target="_blank" rel="noopener">打开演示 →</a>
-                            <a class="project-link" href="https://github.com/bigcow2018/shuojiceshi" target="_blank" rel="noopener">GitHub</a>
+            </section>
+
+            <section id="projects">
+                <div class="wrap">
+                    <div class="sec-head">
+                        <span class="fig">02</span>
+                        <h2>项目</h2>
+                        <span class="sec-en">PROJECTS</span>
+                    </div>
+                    <div class="projects-grid">
+                        <article class="dwg-card">
+                            <div class="dwg-card-head">
+                                <span class="dwg-id">DWG 02-01</span>
+                                <span class="status">STATUS / 介绍即将发布</span>
+                            </div>
+                            <div class="dwg-card-body">
+                                <h3>数智化实践教学管理平台</h3>
+                                <p>面向实践教学的管理平台。已规划四期演示：SaaS，以及减速器拆装 / 砂型铸造、手机立体教材、齿轮范成仪。</p>
+                                <div class="dwg-meta">
+                                    <span class="src">来源：公开描述 · 无对外仓库链</span>
+                                    <span class="project-soon">介绍即将发布</span>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="dwg-card">
+                            <div class="dwg-card-head">
+                                <span class="dwg-id">DWG 02-02</span>
+                                <span class="status">STATUS / 可演示</span>
+                            </div>
+                            <div class="dwg-card-body">
+                                <h3>机械制图识图辅助</h3>
+                                <p>手机端看图学习工具，对应教材第 5～8 章与附录。支持对书本或图纸拍照提取线框与圆孔示意，并提供章节图册和机构示意动画。明确用于识图学习，不是自动出图或精密测量。</p>
+                                <div class="dwg-meta">
+                                    <span class="src">来源：公开仓库</span>
+                                    <a href="https://bigcow2018.github.io/jixiezhitu/" target="_blank" rel="noopener">打开演示</a>
+                                    <a href="https://github.com/bigcow2018/jixiezhitu" target="_blank" rel="noopener">GitHub</a>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="dwg-card">
+                            <div class="dwg-card-head">
+                                <span class="dwg-id">DWG 02-03</span>
+                                <span class="status">STATUS / 可演示</span>
+                            </div>
+                            <div class="dwg-card-body">
+                                <h3>机器狗 · 手势场</h3>
+                                <p>打开前置摄像头，用 MediaPipe 做 21 点手指追踪，把机器狗画面叠在实景上。比出 1 / 2 / 3 / 4 或左右摇手，可切换抬腿欢迎、后空翻、跳跃等动作演示。</p>
+                                <div class="dwg-meta">
+                                    <span class="src">来源：公开仓库</span>
+                                    <a href="https://bigcow2018.github.io/dog-cam/" target="_blank" rel="noopener">打开演示</a>
+                                    <a href="https://github.com/bigcow2018/dog-cam" target="_blank" rel="noopener">GitHub</a>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="dwg-card">
+                            <div class="dwg-card-head">
+                                <span class="dwg-id">DWG 02-04</span>
+                                <span class="status">STATUS / 可演示</span>
+                            </div>
+                            <div class="dwg-card-body">
+                                <h3>IMU Sensor Pro Lab</h3>
+                                <p>手机端 IMU 实验页。读取加速度与姿态（Pitch / Roll / Yaw），用曲线图和 3D 模型同步显示设备运动。</p>
+                                <div class="dwg-meta">
+                                    <span class="src">来源：公开仓库</span>
+                                    <a href="https://project-yjzuk.vercel.app/" target="_blank" rel="noopener">打开演示</a>
+                                    <a href="https://github.com/bigcow2018/shuojiceshi" target="_blank" rel="noopener">GitHub</a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section id="knowledge">
+                <div class="wrap">
+                    <div class="sec-head">
+                        <span class="fig">03</span>
+                        <h2>实验页</h2>
+                        <span class="sec-en">LAB PAGES</span>
+                    </div>
+                    <div class="bom">
+                        <div class="bom-head mono">
+                            <span>ITEM</span><span>图名 / 说明</span><span>查阅</span>
+                        </div>
+                        <a class="bom-row" href="https://bigcow2018.github.io/fengshanceshi/" target="_blank" rel="noopener">
+                            <span class="bom-no">03-01</span>
+                            <span>
+                                <strong>风扇动平衡测试</strong>
+                                <span class="bom-desc">将手机竖放固定，用振动与麦克风采样做风扇动平衡监测示意：先标定基线，再根据振动或声音变化给出 OK / NG 提示。</span>
+                            </span>
+                            <span class="bom-open">打开</span>
+                        </a>
+                        <a class="bom-row" href="https://bigcow2018.github.io/cichangcesiv2/" target="_blank" rel="noopener">
+                            <span class="bom-no">03-02</span>
+                            <span>
+                                <strong>磁场监测</strong>
+                                <span class="bom-desc">读取设备磁力计，显示合成磁场 |B|、相对零点变化和三轴分量曲线。需在支持 Generic Sensor 的 Chrome 中以 HTTPS 打开。</span>
+                            </span>
+                            <span class="bom-open">打开</span>
+                        </a>
+                        <a class="bom-row" href="https://bigcow2018.github.io/PPGceshi/" target="_blank" rel="noopener">
+                            <span class="bom-no">03-03</span>
+                            <span>
+                                <strong>PPG 心率示意</strong>
+                                <span class="bom-desc">用后置摄像头读取画面红色分量，示意光电容积脉搏波并估算 BPM。页面标明非医疗用途，结果受按压、光线和设备影响。</span>
+                            </span>
+                            <span class="bom-open">打开</span>
+                        </a>
+                        <a class="bom-row" href="https://bigcow2018.github.io/shoushi/" target="_blank" rel="noopener">
+                            <span class="bom-no">03-04</span>
+                            <span>
+                                <strong>手部骨骼 · 丝绸物理</strong>
+                                <span class="bom-desc">网络摄像头实时 21 点手部骨骼，叠加以指尖为跟随目标的丝绸飘带物理效果，基于 MediaPipe 手部模型。</span>
+                            </span>
+                            <span class="bom-open">打开</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tools">
+                <div class="wrap">
+                    <div class="sec-head">
+                        <span class="fig">04</span>
+                        <h2>工具</h2>
+                        <span class="sec-en">TOOLS</span>
+                    </div>
+                    <div class="tools-table">
+                        <div class="tool-row">
+                            <h3>AI 工具</h3>
+                            <div>
+                                <a href="https://grok.com" target="_blank" rel="noopener">Grok</a><span class="sep">/</span>
+                                <a href="https://claude.ai" target="_blank" rel="noopener">Claude</a><span class="sep">/</span>
+                                <a href="https://cursor.com" target="_blank" rel="noopener">Cursor</a><span class="sep">/</span>
+                                <a href="https://www.comfy.org" target="_blank" rel="noopener">ComfyUI</a>
+                            </div>
+                        </div>
+                        <div class="tool-row">
+                            <h3>设计软件</h3>
+                            <div>
+                                <a href="https://www.solidworks.com" target="_blank" rel="noopener">SolidWorks</a><span class="sep">/</span>
+                                <a href="https://www.blender.org" target="_blank" rel="noopener">Blender</a>
+                            </div>
+                        </div>
+                        <div class="tool-row">
+                            <h3>开发工具</h3>
+                            <div>
+                                <a href="https://code.visualstudio.com" target="_blank" rel="noopener">VS Code</a><span class="sep">/</span>
+                                <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
 
-    <section id="knowledge">
-        <div class="container">
-            <h2>相关实验页</h2>
-            <p class="section-sub">更多可在浏览器里直接打开的公开实验，不是博客目录。</p>
-            <div class="kb-list">
-                <a class="kb-item" href="https://bigcow2018.github.io/fengshanceshi/" target="_blank" rel="noopener">
-                    <h3>风扇动平衡测试</h3>
-                    <p>将手机竖放固定，用振动与麦克风采样做风扇动平衡监测示意：先标定基线，再根据振动或声音变化给出 OK / NG 提示。</p>
-                </a>
-                <a class="kb-item" href="https://bigcow2018.github.io/cichangcesiv2/" target="_blank" rel="noopener">
-                    <h3>磁场监测</h3>
-                    <p>读取设备磁力计，显示合成磁场 |B|、相对零点变化和三轴分量曲线。需在支持 Generic Sensor 的 Chrome 中以 HTTPS 打开。</p>
-                </a>
-                <a class="kb-item" href="https://bigcow2018.github.io/PPGceshi/" target="_blank" rel="noopener">
-                    <h3>PPG 心率示意</h3>
-                    <p>用后置摄像头读取画面红色分量，示意光电容积脉搏波并估算 BPM。页面标明非医疗用途，结果受按压、光线和设备影响。</p>
-                </a>
-                <a class="kb-item" href="https://bigcow2018.github.io/shoushi/" target="_blank" rel="noopener">
-                    <h3>手部骨骼 · 丝绸物理</h3>
-                    <p>网络摄像头实时 21 点手部骨骼，叠加以指尖为跟随目标的丝绸飘带物理效果，基于 MediaPipe 手部模型。</p>
-                </a>
-            </div>
-        </div>
-    </section>
+            <section id="contact">
+                <div class="wrap">
+                    <div class="sec-head">
+                        <span class="fig">05</span>
+                        <h2>联系</h2>
+                        <span class="sec-en">CONTACT</span>
+                    </div>
+                    <div class="contact-box">
+                        <div>
+                            <h3 style="font-size:1.05rem;font-weight:600;letter-spacing:.08em;margin-bottom:4px;">欢迎来信</h3>
+                            <p>欢迎交流机械设计、实验工具、项目合作或任何想法。这是属于我的数字土地，也欢迎你来访。</p>
+                        </div>
+                        <div class="contact-actions">
+                            <a href="mailto:bigcow97@qq.com" class="ref-link solid">发送邮件</a>
+                            <a href="https://github.com/bigcow2018" class="ref-link" target="_blank" rel="noopener">GitHub 主页</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
 
-    <section id="tools" style="background:#f1f5f9;">
-        <div class="container">
-            <h2>常用工具</h2>
-            <p class="section-sub">日常会用到的工具，链接指向各自官网。</p>
-            <div class="tools-grid">
-                <div class="tool-card">
-                    <div class="icon">🤖</div>
-                    <h3>AI 工具</h3>
-                    <p class="tool-links">
-                        <a href="https://grok.com" target="_blank" rel="noopener">Grok</a> /
-                        <a href="https://claude.ai" target="_blank" rel="noopener">Claude</a> /
-                        <a href="https://cursor.com" target="_blank" rel="noopener">Cursor</a> /
-                        <a href="https://www.comfy.org" target="_blank" rel="noopener">ComfyUI</a>
-                    </p>
-                </div>
-                <div class="tool-card">
-                    <div class="icon">📐</div>
-                    <h3>设计软件</h3>
-                    <p class="tool-links">
-                        <a href="https://www.solidworks.com" target="_blank" rel="noopener">SolidWorks</a> /
-                        <a href="https://www.blender.org" target="_blank" rel="noopener">Blender</a>
-                    </p>
-                </div>
-                <div class="tool-card">
-                    <div class="icon">💻</div>
-                    <h3>开发工具</h3>
-                    <p class="tool-links">
-                        <a href="https://code.visualstudio.com" target="_blank" rel="noopener">VS Code</a> /
-                        <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
-                    </p>
+        <footer class="title-block">
+            <div class="wrap">
+                <ul class="footer-links">
+                    <li><a href="#about">01 关于</a></li>
+                    <li><a href="#projects">02 项目</a></li>
+                    <li><a href="#knowledge">03 实验</a></li>
+                    <li><a href="#tools">04 工具</a></li>
+                    <li><a href="#contact">05 联系</a></li>
+                    <li><a href="https://github.com/bigcow2018" target="_blank" rel="noopener">GitHub</a></li>
+                </ul>
+                <div class="tb">
+                    <div>
+                        <span class="tb-label">OWNER</span>
+                        任瑞 · 数字土地
+                    </div>
+                    <div>
+                        <span class="tb-label">TITLE</span>
+                        机械设计实践者 · 个人站点
+                    </div>
+                    <div>
+                        <span class="tb-label">REV / DATE</span>
+                        A &nbsp;/&nbsp; 2026
+                    </div>
+                    <div class="tb-quote">“哪怕现在没人访问，十年以后回头看，它也可能成为你最珍贵的数字资产。”</div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <section id="contact">
-        <div class="container">
-            <div class="contact-box">
-                <h2>联系我</h2>
-                <p>欢迎交流机械设计、实验工具、项目合作或任何想法。<br>这是属于我的数字土地，也欢迎你来访。</p>
-                <div class="contact-actions">
-                    <a href="mailto:bigcow97@qq.com" class="btn">发送邮件</a>
-                    <a href="https://github.com/bigcow2018" class="btn btn-secondary" target="_blank" rel="noopener">GitHub 主页</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <ul class="footer-links">
-                <li><a href="#about">关于</a></li>
-                <li><a href="#projects">项目</a></li>
-                <li><a href="#knowledge">实验页</a></li>
-                <li><a href="#tools">工具</a></li>
-                <li><a href="#contact">联系</a></li>
-                <li><a href="https://github.com/bigcow2018" target="_blank" rel="noopener">GitHub</a></li>
-            </ul>
-            <p>© 2026 任瑞 · 我的数字土地 · 用 AI 与双手建造</p>
-            <p style="margin-top: 8px;">“哪怕现在没人访问，十年以后回头看，它也可能成为你最珍贵的数字资产。”</p>
-        </div>
-    </footer>
+        </footer>
+    </div>
     <script>
         document.querySelectorAll('.nav-links a').forEach(function (link) {
             link.addEventListener('click', function () {
