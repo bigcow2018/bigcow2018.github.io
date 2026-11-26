@@ -5,8 +5,8 @@
     python3 docs/build-manifest.py
 
 将 PDF 放入 files/（可建子目录）后再运行本脚本。排序依据文件或目录名末尾编号：
-日期（YYYYMMDD）之后的序号按数值排列（例如 100、101、103、1002），位数可变。
-不要用纯字符串比较整个编号，否则 202611261002 会排到 20261126100 与 20261126101 之间。
+日期（YYYYMMDD）之后的序号按数值排列（例如 100、101、102、103），位数可变。
+不要用纯字符串比较整个编号，否则较长序号按字符串比较时可能插到较短序号中间。
 没有编号的条目按名称排在有编号的后面。
 """
 
@@ -32,7 +32,7 @@ ID_RE = re.compile(r"(\d{8})(\d+)(?:\.[^.]+)?$")
 def entry_key(name: str) -> tuple:
     match = ID_RE.search(name)
     if match:
-        # (has-id, date, numeric sequence) so 100, 101, 103, 1002 stay in value order
+        # (has-id, date, numeric sequence) so 100, 101, 102, 103 stay in value order
         return (0, match.group(1), int(match.group(2)), name)
     return (1, "", 0, name)
 
