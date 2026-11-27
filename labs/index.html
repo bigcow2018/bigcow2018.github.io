@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实验页</title>
+    <meta name="description" content="任瑞个人网站的实验页。汇总可交互的实验入口，可在浏览器中打开。">
+    <link rel="canonical" href="https://bigcow2018.github.io/labs/">
+    <link rel="icon" href="https://bigcow2018.github.io/assets/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="https://bigcow2018.github.io/assets/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://bigcow2018.github.io/assets/favicon.png">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:url" content="https://bigcow2018.github.io/labs/">
+    <meta property="og:title" content="实验页">
+    <meta property="og:description" content="任瑞个人网站的实验页。汇总可交互的实验入口，可在浏览器中打开。">
+    <meta property="og:image" content="https://bigcow2018.github.io/assets/og.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="实验页">
+    <meta name="twitter:description" content="任瑞个人网站的实验页。汇总可交互的实验入口，可在浏览器中打开。">
+    <meta name="twitter:image" content="https://bigcow2018.github.io/assets/og.png">
+    <style>
+        @font-face {
+            font-family: "IBM Plex Sans";
+            src: url("../assets/fonts/IBMPlexSans-Regular.woff2") format("woff2");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "IBM Plex Sans";
+            src: url("../assets/fonts/IBMPlexSans-SemiBold.woff2") format("woff2");
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "IBM Plex Mono";
+            src: url("../assets/fonts/IBMPlexMono-Regular.woff2") format("woff2");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Noto Sans SC Subset";
+            src: url("../assets/fonts/NotoSansSC-Regular-subset.woff2") format("woff2");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Noto Sans SC Subset";
+            src: url("../assets/fonts/NotoSansSC-Bold-subset.woff2") format("woff2");
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+        :root {
+            --paper: #e3dccb;
+            --sheet: #efe8d6;
+            --ink: #1a1813;
+            --ink-soft: #4d483c;
+            --blueprint: #184272;
+            --blueprint-deep: #102e54;
+            --copper: #7c451d;
+            --steel: #2c4548;
+            --line: #b3aa94;
+            --line-strong: #1a1813;
+            --grid: rgba(24, 66, 114, 0.08);
+            --grid-strong: rgba(24, 66, 114, 0.14);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: "IBM Plex Sans", "Noto Sans SC Subset", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.7;
+            font-weight: 400;
+            font-size: 17px;
+        }
+        .mono, .fig, .anno, .dwg-id, .status, .bom-no, .kicker, .plate-caption, .sec-en, .tb-label, .doc-size {
+            font-family: "IBM Plex Mono", "Noto Sans SC Subset", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+        }
+        a { color: var(--blueprint); text-underline-offset: 3px; }
+        a:hover { color: var(--blueprint-deep); }
+        a:focus-visible, .nav-toggle:focus-visible, .nav-toggle-input:focus-visible + .nav-toggle, button:focus-visible {
+            outline: 2px solid var(--copper);
+            outline-offset: 3px;
+        }
+        .skip {
+            position: absolute;
+            left: -999px;
+            top: 0;
+            background: var(--sheet);
+            color: var(--ink);
+            padding: 8px 12px;
+            z-index: 200;
+        }
+        .skip:focus { left: 16px; top: 16px; }
+
+        .frame {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin: 14px;
+            min-height: calc(100vh - 28px);
+            background-color: var(--sheet);
+            background-image:
+                linear-gradient(var(--grid-strong) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-strong) 1px, transparent 1px),
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 96px 96px, 96px 96px, 16px 16px, 16px 16px;
+            background-position: -1px -1px;
+            border: 1.5px solid var(--ink);
+        }
+        .frame::before {
+            content: "";
+            position: absolute;
+            inset: 6px;
+            border: 1px solid var(--ink);
+            pointer-events: none;
+            z-index: 5;
+        }
+        .corners span {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            z-index: 6;
+            pointer-events: none;
+        }
+        .corners .tl { top: -1px; left: -1px; border-top: 3px solid var(--copper); border-left: 3px solid var(--copper); }
+        .corners .tr { top: -1px; right: -1px; border-top: 3px solid var(--copper); border-right: 3px solid var(--copper); }
+        .corners .bl { bottom: -1px; left: -1px; border-bottom: 3px solid var(--copper); border-left: 3px solid var(--copper); }
+        .corners .br { bottom: -1px; right: -1px; border-bottom: 3px solid var(--copper); border-right: 3px solid var(--copper); }
+
+        .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: rgba(239, 232, 214, 0.94);
+            border-bottom: 1px solid var(--ink);
+        }
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 64px;
+            position: relative;
+            gap: 16px;
+        }
+        .logo {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--ink);
+            min-height: 44px;
+            padding: 8px 0;
+        }
+        .logo .dwg-id {
+            color: var(--copper);
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+        }
+        .logo strong {
+            font-weight: 600;
+            font-size: 1.05rem;
+            letter-spacing: 0.08em;
+        }
+        .nav-toggle-input {
+            position: absolute;
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+        .nav-toggle {
+            display: none;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            border: 1px solid var(--ink);
+            background: var(--sheet);
+        }
+        .nav-toggle span {
+            display: block;
+            width: 18px;
+            height: 1.5px;
+            background: var(--ink);
+        }
+        .nav-links { display: flex; gap: 4px 22px; list-style: none; flex-wrap: wrap; justify-content: flex-end; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--ink);
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: baseline;
+            gap: 6px;
+            min-height: 44px;
+            align-items: center;
+        }
+        .nav-links a .n { color: var(--copper); font-size: 0.7rem; letter-spacing: 0.06em; }
+        .nav-links a:hover { color: var(--blueprint); }
+        .nav-links a[aria-current="page"] { color: var(--blueprint); }
+
+        .hero { padding: 48px 0 36px; }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+        .nameplate {
+            justify-self: start;
+            transform: rotate(-2.2deg);
+            width: 200px;
+        }
+        .plate {
+            border: 2px solid var(--ink);
+            background: var(--paper);
+            padding: 10px;
+            position: relative;
+            box-shadow: 3px 3px 0 var(--ink);
+        }
+        .plate::before, .plate::after {
+            content: "";
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--copper);
+            border: 1px solid var(--ink);
+        }
+        .plate::before { top: 6px; left: 6px; }
+        .plate::after { top: 6px; right: 6px; }
+        .plate .rivets-b {
+            position: absolute;
+            left: 6px;
+            right: 6px;
+            bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+        .plate .rivets-b i {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--copper);
+            border: 1px solid var(--ink);
+            display: block;
+        }
+        .plate img {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border: 1px solid var(--ink);
+            background: #d8d3c4;
+        }
+        .plate-caption {
+            margin-top: 8px;
+            text-align: center;
+            font-size: 0.68rem;
+            letter-spacing: 0.14em;
+            color: var(--copper);
+        }
+        .kicker {
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            color: var(--copper);
+            margin-bottom: 14px;
+        }
+        .docs-hero h1 {
+            font-size: clamp(1.85rem, 5vw, 2.9rem);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            line-height: 1.2;
+        }
+
+        section { padding: 8px 0 56px; }
+        .bom-no { color: var(--copper); font-size: 0.78rem; letter-spacing: 0.06em; padding-top: 3px; }
+
+        .doc-list { border: 1px solid var(--ink); background: rgba(239, 232, 214, 0.65); }
+        .doc-head, .doc-row {
+            display: grid;
+            grid-template-columns: 132px minmax(0, 1fr) 88px;
+            gap: 12px;
+            padding: 12px 16px;
+            align-items: start;
+        }
+        .doc-head {
+            border-bottom: 1px solid var(--ink);
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            color: var(--ink-soft);
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+        .doc-row { min-height: 44px; border-top: 1px solid var(--line); }
+        .doc-row.is-first-visible { border-top: 0; }
+        .doc-row[hidden],
+        .doc-row.is-hidden { display: none !important; border-top: 0; }
+        .doc-row:hover { background: rgba(227, 220, 203, 0.8); }
+        .doc-name {
+            display: block;
+            font-weight: 600;
+            color: var(--ink);
+            word-break: break-word;
+        }
+        .doc-size {
+            display: block;
+            color: var(--ink-soft);
+            font-size: 0.85rem;
+            margin-top: 2px;
+        }
+        .doc-desc {
+            display: block;
+            color: var(--ink-soft);
+            font-size: 0.9rem;
+            margin-top: 2px;
+        }
+        .doc-actions {
+            display: flex;
+            gap: 4px 14px;
+            align-items: center;
+            white-space: nowrap;
+            min-height: 44px;
+        }
+        .doc-actions a {
+            color: var(--blueprint);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+        }
+        .doc-actions a:hover { text-decoration: underline; }
+        .doc-folder { margin-top: 28px; }
+        .doc-folder-head {
+            font-size: 1.15rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+        .doc-empty { color: var(--ink-soft); }
+
+        .doc-pager {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px 12px;
+            margin-top: 0;
+            padding: 10px 16px;
+            border: 1px solid var(--ink);
+            border-top: 0;
+            background: rgba(239, 232, 214, 0.65);
+            font-size: 0.85rem;
+            color: var(--ink-soft);
+        }
+        .doc-pager-total { color: var(--ink); }
+        .doc-pager-size select,
+        .doc-pager-jump input {
+            font-family: "IBM Plex Mono", "Noto Sans SC Subset", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+            font-size: 0.85rem;
+            border: 1px solid var(--ink);
+            background: var(--sheet);
+            color: var(--ink);
+            min-height: 36px;
+            padding: 0 8px;
+        }
+        .doc-pager-jump input {
+            width: 3.4em;
+            text-align: center;
+            margin: 0 4px;
+            -moz-appearance: textfield;
+        }
+        .doc-pager-jump input::-webkit-outer-spin-button,
+        .doc-pager-jump input::-webkit-inner-spin-button { appearance: none; margin: 0; }
+        .doc-pager-pages { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+        .doc-pager-btn {
+            min-width: 36px;
+            min-height: 36px;
+            padding: 0 8px;
+            border: 1px solid var(--ink);
+            background: var(--sheet);
+            color: var(--ink);
+            cursor: pointer;
+            font-family: "IBM Plex Mono", "Noto Sans SC Subset", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+            font-size: 0.85rem;
+            line-height: 1;
+        }
+        .doc-pager-btn[aria-current="page"] {
+            background: var(--blueprint);
+            color: var(--sheet);
+            border-color: var(--blueprint-deep);
+        }
+        .doc-pager-btn:hover:not(:disabled):not([aria-current="page"]) {
+            background: var(--paper);
+            color: var(--blueprint);
+        }
+        .doc-pager-btn:disabled {
+            color: var(--line);
+            background: var(--paper);
+            cursor: not-allowed;
+        }
+        .doc-pager-ellipsis {
+            min-width: 36px;
+            text-align: center;
+            color: var(--ink-soft);
+            font-family: "IBM Plex Mono", "Noto Sans SC Subset", ui-monospace, monospace;
+        }
+        .doc-pager-jump { display: inline-flex; align-items: center; gap: 0; }
+
+        footer.title-block { padding: 0 0 28px; margin-top: auto; }
+        .tb {
+            border: 1px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1.1fr 1.6fr 0.9fr;
+            background: var(--sheet);
+        }
+        .tb div { padding: 10px 14px; }
+        .tb div + div { border-left: 1px solid var(--ink); }
+        .tb-label {
+            display: block;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            color: var(--copper);
+            margin-bottom: 2px;
+        }
+        .tb-quote {
+            grid-column: 1 / -1;
+            border-top: 1px solid var(--ink);
+            color: var(--ink-soft);
+            font-size: 0.88rem;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 18px;
+            list-style: none;
+            margin-bottom: 14px;
+        }
+        .footer-links a {
+            color: var(--ink-soft);
+            text-decoration: none;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.88rem;
+        }
+        .footer-links a:hover { color: var(--blueprint); }
+        .footer-links a[aria-current="page"] { color: var(--blueprint); }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+        }
+
+        @media (max-width: 800px) {
+            body { font-size: 16px; }
+            .frame { margin: 8px; min-height: calc(100vh - 16px); }
+            .frame::before { inset: 4px; }
+            .wrap { padding: 0 16px; }
+            .nav-toggle { display: flex; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 64px;
+                left: -16px;
+                right: -16px;
+                flex-direction: column;
+                gap: 0;
+                background: var(--sheet);
+                border-bottom: 1px solid var(--ink);
+                border-top: 1px solid var(--ink);
+                padding: 6px 16px 10px;
+            }
+            .nav-links a { width: 100%; }
+            #nav-toggle:checked ~ .nav-links { display: flex; }
+            .hero { padding: 32px 0 28px; }
+            .hero-grid { grid-template-columns: 1fr; gap: 24px; }
+            .nameplate { transform: none; width: 132px; }
+            .docs-hero h1 { font-size: clamp(1.7rem, 8vw, 2.2rem); }
+            .doc-head { display: none; }
+            .doc-row { grid-template-columns: minmax(0, 1fr) 88px; gap: 8px; padding: 12px; }
+            .bom-no { grid-column: 1 / -1; padding-top: 0; }
+            .doc-pager { justify-content: flex-start; padding: 10px 12px; }
+            .tb { grid-template-columns: 1fr; }
+            .tb div + div { border-left: 0; border-top: 1px solid var(--ink); }
+            .tb-quote { grid-column: auto; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">跳到正文</a>
+    <div class="frame">
+        <div class="corners" aria-hidden="true">
+            <span class="tl"></span><span class="tr"></span>
+            <span class="bl"></span><span class="br"></span>
+        </div>
+
+        <nav>
+            <div class="wrap nav-inner">
+                <a href="/" class="logo">
+                    <span class="dwg-id">DWG A-00</span>
+                    <strong>数字土地</strong>
+                </a>
+                <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
+                <label for="nav-toggle" class="nav-toggle" aria-label="打开或关闭菜单">
+                    <span></span><span></span><span></span>
+                </label>
+                <ul class="nav-links">
+                    <li><a href="/#about"><span class="n mono">01</span>关于</a></li>
+                    <li><a href="/#projects"><span class="n mono">02</span>项目</a></li>
+                    <li><a href="/#grok-apps"><span class="n mono">03</span>应用墙</a></li>
+                    <li><a href="/labs/" aria-current="page"><span class="n mono">04</span>实验</a></li>
+                    <li><a href="/instruments/"><span class="n mono">05</span>教学仪器</a></li>
+                    <li><a href="/docs/"><span class="n mono">06</span>资料</a></li>
+                    <li><a href="/#tools"><span class="n mono">07</span>工具</a></li>
+                    <li><a href="/#contact"><span class="n mono">08</span>联系</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <main id="main">
+            <header class="hero docs-hero">
+                <div class="wrap hero-grid">
+                    <figure class="nameplate">
+                        <div class="plate">
+                            <img src="../assets/avatar.png" width="160" height="160" alt="任瑞的 GitHub 头像">
+                            <div class="rivets-b" aria-hidden="true"><i></i><i></i></div>
+                        </div>
+                        <figcaption class="plate-caption">STAMP · 数字土地</figcaption>
+                    </figure>
+                    <div class="hero-copy">
+                        <p class="kicker">FIG. 04 &nbsp;/&nbsp; LAB PAGES &nbsp;/&nbsp; 实验页</p>
+                        <h1>实验页</h1>
+                    </div>
+                </div>
+            </header>
+
+            <section>
+                <div class="wrap">
+                                        <!-- LABS-LIST:START -->
+                    <div class="doc-list">
+                        <div class="doc-head">
+                            <span class="mono">编号</span>
+                            <span>图名 / 说明</span>
+                            <span>操作</span>
+                        </div>
+                        <div class="doc-row">
+                            <span class="bom-no">04-01</span>
+                            <div>
+                                <span class="doc-name">风扇动平衡测试</span>
+                                <span class="doc-desc">将手机竖放固定，用振动与麦克风采样做风扇动平衡监测示意：先标定基线，再根据振动或声音变化给出 OK / NG 提示。</span>
+                            </div>
+                            <span class="doc-actions">
+                                <a href="https://bigcow2018.github.io/fengshanceshi/" target="_blank" rel="noopener">打开</a>
+                            </span>
+                        </div>
+                        <div class="doc-row">
+                            <span class="bom-no">04-02</span>
+                            <div>
+                                <span class="doc-name">磁场监测</span>
+                                <span class="doc-desc">读取设备磁力计，显示合成磁场 |B|、相对零点变化和三轴分量曲线。需在支持 Generic Sensor 的 Chrome 中以 HTTPS 打开。</span>
+                            </div>
+                            <span class="doc-actions">
+                                <a href="https://bigcow2018.github.io/cichangcesiv2/" target="_blank" rel="noopener">打开</a>
+                            </span>
+                        </div>
+                        <div class="doc-row">
+                            <span class="bom-no">04-03</span>
+                            <div>
+                                <span class="doc-name">PPG 心率示意</span>
+                                <span class="doc-desc">用后置摄像头读取画面红色分量，示意光电容积脉搏波并估算 BPM。页面标明非医疗用途，结果受按压、光线和设备影响。</span>
+                            </div>
+                            <span class="doc-actions">
+                                <a href="https://bigcow2018.github.io/PPGceshi/" target="_blank" rel="noopener">打开</a>
+                            </span>
+                        </div>
+                        <div class="doc-row">
+                            <span class="bom-no">04-04</span>
+                            <div>
+                                <span class="doc-name">手部骨骼 · 丝绸物理</span>
+                                <span class="doc-desc">网络摄像头实时 21 点手部骨骼，叠加以指尖为跟随目标的丝绸飘带物理效果，基于 MediaPipe 手部模型。</span>
+                            </div>
+                            <span class="doc-actions">
+                                <a href="https://bigcow2018.github.io/shoushi/" target="_blank" rel="noopener">打开</a>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- LABS-LIST:END -->
+                    <nav class="doc-pager" id="doc-pager" aria-label="实验分页">
+                        <span class="doc-pager-total mono" id="doc-pager-total">共 0 条</span>
+                        <label class="doc-pager-size">
+                            <select id="doc-pager-size" aria-label="每页条数">
+                                <option value="10" selected>10条/页</option>
+                                <option value="20">20条/页</option>
+                                <option value="50">50条/页</option>
+                            </select>
+                        </label>
+                        <div class="doc-pager-pages" id="doc-pager-pages"></div>
+                        <form class="doc-pager-jump" id="doc-pager-jump" action="#">
+                            <label>前往 <input type="number" id="doc-pager-goto" min="1" inputmode="numeric" aria-label="前往页码"> 页</label>
+                        </form>
+                    </nav>
+                </div>
+            </section>
+        </main>
+
+        <footer class="title-block">
+            <div class="wrap">
+                <ul class="footer-links">
+                    <li><a href="/#about">01 关于</a></li>
+                    <li><a href="/#projects">02 项目</a></li>
+                    <li><a href="/#grok-apps">03 应用墙</a></li>
+                    <li><a href="/labs/" aria-current="page">04 实验</a></li>
+                    <li><a href="/instruments/">05 教学仪器</a></li>
+                    <li><a href="/docs/">06 资料</a></li>
+                    <li><a href="/#tools">07 工具</a></li>
+                    <li><a href="/#contact">08 联系</a></li>
+                    <li><a href="https://github.com/bigcow2018" target="_blank" rel="noopener">GitHub</a></li>
+                </ul>
+                <div class="tb">
+                    <div>
+                        <span class="tb-label">OWNER</span>
+                        任瑞 · 数字土地
+                    </div>
+                    <div>
+                        <span class="tb-label">TITLE</span>
+                        实验页
+                    </div>
+                    <div>
+                        <span class="tb-label">REV / DATE</span>
+                        B &nbsp;/&nbsp; 2026
+                    </div>
+                    <div class="tb-quote">“哪怕现在没人访问，十年以后回头看，它也可能成为你最珍贵的数字资产。”</div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script>
+        document.querySelectorAll('.nav-links a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                var toggle = document.getElementById('nav-toggle');
+                if (toggle) toggle.checked = false;
+            });
+        });
+        (function () {
+            var list = document.querySelector('.doc-list');
+            var pager = document.getElementById('doc-pager');
+            var totalEl = document.getElementById('doc-pager-total');
+            var sizeEl = document.getElementById('doc-pager-size');
+            var pagesEl = document.getElementById('doc-pager-pages');
+            var jumpForm = document.getElementById('doc-pager-jump');
+            var gotoEl = document.getElementById('doc-pager-goto');
+            if (!list || !pager || !pagesEl) return;
+            var rows = list.querySelectorAll('.doc-row');
+            var total = rows.length;
+            var allowed = [10, 20, 50];
+            var size = 10;
+            var page = 1;
+
+            function pageCount() {
+                return Math.max(1, Math.ceil(total / size) || 1);
+            }
+
+            function clamp() {
+                var n = pageCount();
+                if (page < 1) page = 1;
+                if (page > n) page = n;
+            }
+
+            function visiblePages(current, last) {
+                if (last <= 8) {
+                    var all = [];
+                    for (var i = 1; i <= last; i++) all.push(i);
+                    return all;
+                }
+                var mark = {};
+                function add(p) {
+                    if (p >= 1 && p <= last) mark[p] = true;
+                }
+                add(1);
+                add(last);
+                var i;
+                for (i = current - 2; i <= current + 2; i++) add(i);
+                if (current <= 4) {
+                    for (i = 1; i <= 6; i++) add(i);
+                }
+                if (current >= last - 3) {
+                    for (i = last - 5; i <= last; i++) add(i);
+                }
+                var keys = Object.keys(mark).map(Number).sort(function (a, b) { return a - b; });
+                var out = [];
+                for (i = 0; i < keys.length; i++) {
+                    if (i > 0 && keys[i] - keys[i - 1] > 1) out.push('…');
+                    out.push(keys[i]);
+                }
+                return out;
+            }
+
+            function btn(label, opts) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'doc-pager-btn';
+                b.textContent = label;
+                if (opts.label) b.setAttribute('aria-label', opts.label);
+                if (opts.current) b.setAttribute('aria-current', 'page');
+                if (opts.disabled) b.disabled = true;
+                if (opts.go) {
+                    b.addEventListener('click', function () {
+                        page = opts.go;
+                        render();
+                    });
+                }
+                return b;
+            }
+
+            function render() {
+                clamp();
+                var start = (page - 1) * size;
+                var end = start + size;
+                for (var i = 0; i < rows.length; i++) {
+                    var hide = (i < start || i >= end);
+                    rows[i].hidden = hide;
+                    rows[i].classList.toggle('is-hidden', hide);
+                    rows[i].classList.toggle('is-first-visible', !hide && i === start);
+                }
+                if (totalEl) totalEl.textContent = '共 ' + total + ' 条';
+                if (gotoEl) {
+                    gotoEl.max = String(pageCount());
+                    gotoEl.placeholder = String(page);
+                }
+                pagesEl.textContent = '';
+                var last = pageCount();
+                pagesEl.appendChild(btn('‹', { label: '上一页', disabled: page <= 1, go: page - 1 }));
+                visiblePages(page, last).forEach(function (item) {
+                    if (item === '…') {
+                        var e = document.createElement('span');
+                        e.className = 'doc-pager-ellipsis';
+                        e.textContent = '…';
+                        e.setAttribute('aria-hidden', 'true');
+                        pagesEl.appendChild(e);
+                    } else {
+                        pagesEl.appendChild(btn(String(item), { current: item === page, go: item }));
+                    }
+                });
+                pagesEl.appendChild(btn('›', { label: '下一页', disabled: page >= last, go: page + 1 }));
+                try {
+                    var url = new URL(window.location.href);
+                    if (page === 1) url.searchParams.delete('page');
+                    else url.searchParams.set('page', String(page));
+                    if (size === 10) url.searchParams.delete('size');
+                    else url.searchParams.set('size', String(size));
+                    var next = url.pathname + url.search + url.hash;
+                    if (next !== window.location.pathname + window.location.search + window.location.hash) {
+                        history.replaceState(null, '', next);
+                    }
+                } catch (err) {}
+            }
+
+            function readUrl() {
+                try {
+                    var url = new URL(window.location.href);
+                    var s = parseInt(url.searchParams.get('size'), 10);
+                    if (allowed.indexOf(s) !== -1) size = s;
+                    var p = parseInt(url.searchParams.get('page'), 10);
+                    if (p >= 1) page = p;
+                } catch (err) {}
+                if (sizeEl) sizeEl.value = String(size);
+            }
+
+            if (sizeEl) {
+                sizeEl.addEventListener('change', function () {
+                    var s = parseInt(sizeEl.value, 10);
+                    if (allowed.indexOf(s) !== -1) size = s;
+                    page = 1;
+                    render();
+                });
+            }
+            if (jumpForm) {
+                jumpForm.addEventListener('submit', function (ev) {
+                    ev.preventDefault();
+                    var p = parseInt(gotoEl && gotoEl.value, 10);
+                    if (!isNaN(p)) {
+                        page = p;
+                        render();
+                    }
+                    if (gotoEl) gotoEl.value = '';
+                });
+            }
+            readUrl();
+            render();
+        })();
+    </script>
+</body>
+</html>
