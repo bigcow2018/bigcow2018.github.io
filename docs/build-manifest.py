@@ -4,10 +4,10 @@
 用法：在本目录或仓库根目录运行
     python3 docs/build-manifest.py
 
-将 PDF 放入 files/（可建子目录）后再运行本脚本。排序依据文件或目录名末尾编号：
-日期（YYYYMMDD）之后的序号按数值排列（例如 100、101、102、103），位数可变。
-不要用纯字符串比较整个编号，否则较长序号按字符串比较时可能插到较短序号中间。
-没有编号的条目按名称排在有编号的后面。
+将 PDF 放入 files/（可建子目录）后再运行本脚本。页面将各子目录中的文件合并为一份清单，
+不显示文件夹分组标题。排序依据文件名末尾编号：日期（YYYYMMDD）之后的序号按数值排列
+（例如 100、101、102、103），位数可变。不要用纯字符串比较整个编号。
+没有编号的条目按名称排在有编号的后面。仓库中的子目录结构保持不变。
 """
 
 from __future__ import annotations
@@ -114,31 +114,19 @@ def render_files(files: list[dict]) -> list[str]:
     return lines
 
 
-def render_tree(node: dict, is_root: bool = True, indent: int = 20) -> list[str]:
-    lines: list[str] = []
-    pad = " " * indent
-    if not is_root:
-        ident = file_id(node["name"])
-        ident_html = f'<span class="bom-no">{escape(ident)}</span> ' if ident else ""
-        lines.append(f'{pad}<section class="doc-folder">')
-        lines.append(
-            f'{pad}    <h2 class="doc-folder-head">{ident_html}{escape(node["name"])}</h2>'
-        )
-        indent += 4
-        pad = " " * indent
-    if node["files"]:
-        # render_files uses a fixed indent matching the root list; adjust if nested
-        file_block = render_files(node["files"])
-        if not is_root:
-            file_block = [re.sub(r"^                    ", pad, line) for line in file_block]
-        lines.extend(file_block)
-    elif is_root and not node["dirs"]:
-        lines.append(f'{pad}<p class="doc-empty">暂无文档。</p>')
+def flatten_files(node: dict) -> list[dict]:
+    items = list(node["files"])
     for child in node["dirs"]:
-        lines.extend(render_tree(child, is_root=False, indent=indent))
-    if not is_root:
-        lines.append(f'{" " * (indent - 4)}</section>')
-    return lines
+        items.extend(flatten_files(child))
+    items.sort(key=lambda item: entry_key(item["name"]))
+    return items
+
+
+def render_list(node: dict) -> list[str]:
+    files = flatten_files(node)
+    if not files:
+        return ['                    <p class="doc-empty">暂无文档。</p>']
+    return render_files(files)
 
 
 def count_files(node: dict) -> int:
@@ -166,7 +154,7 @@ def main() -> int:
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    block = "\n".join(render_tree(tree, is_root=True))
+    block = "\n".join(render_list(tree))
     page = PAGE_PATH.read_text(encoding="utf-8")
     PAGE_PATH.write_text(update_page(page, block), encoding="utf-8")
     print(f"已写入 {MANIFEST_PATH.relative_to(ROOT.parent)}，共 {manifest['count']} 个文件。")
