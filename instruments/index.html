@@ -293,7 +293,7 @@
         .doc-list { border: 1px solid var(--ink); background: rgba(239, 232, 214, 0.65); }
         .doc-head, .doc-row {
             display: grid;
-            grid-template-columns: 132px 1fr auto;
+            grid-template-columns: 132px minmax(0, 1fr) 88px;
             gap: 12px;
             padding: 12px 16px;
             align-items: start;
@@ -306,8 +306,10 @@
             padding-top: 8px;
             padding-bottom: 8px;
         }
-        .doc-row { min-height: 44px; }
-        .doc-row + .doc-row { border-top: 1px solid var(--line); }
+        .doc-row { min-height: 44px; border-top: 1px solid var(--line); }
+        .doc-row.is-first-visible { border-top: 0; }
+        .doc-row[hidden],
+        .doc-row.is-hidden { display: none !important; border-top: 0; }
         .doc-row:hover { background: rgba(227, 220, 203, 0.8); }
         .doc-name {
             display: block;
@@ -349,6 +351,74 @@
             gap: 10px;
         }
         .doc-empty { color: var(--ink-soft); }
+
+        .doc-pager {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px 12px;
+            margin-top: 0;
+            padding: 10px 16px;
+            border: 1px solid var(--ink);
+            border-top: 0;
+            background: rgba(239, 232, 214, 0.65);
+            font-size: 0.85rem;
+            color: var(--ink-soft);
+        }
+        .doc-pager-total { color: var(--ink); }
+        .doc-pager-size select,
+        .doc-pager-jump input {
+            font-family: "IBM Plex Mono", "Noto Sans SC Subset", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+            font-size: 0.85rem;
+            border: 1px solid var(--ink);
+            background: var(--sheet);
+            color: var(--ink);
+            min-height: 36px;
+            padding: 0 8px;
+        }
+        .doc-pager-jump input {
+            width: 3.4em;
+            text-align: center;
+            margin: 0 4px;
+            -moz-appearance: textfield;
+        }
+        .doc-pager-jump input::-webkit-outer-spin-button,
+        .doc-pager-jump input::-webkit-inner-spin-button { appearance: none; margin: 0; }
+        .doc-pager-pages { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+        .doc-pager-btn {
+            min-width: 36px;
+            min-height: 36px;
+            padding: 0 8px;
+            border: 1px solid var(--ink);
+            background: var(--sheet);
+            color: var(--ink);
+            cursor: pointer;
+            font-family: "IBM Plex Mono", "Noto Sans SC Subset", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+            font-size: 0.85rem;
+            line-height: 1;
+        }
+        .doc-pager-btn[aria-current="page"] {
+            background: var(--blueprint);
+            color: var(--sheet);
+            border-color: var(--blueprint-deep);
+        }
+        .doc-pager-btn:hover:not(:disabled):not([aria-current="page"]) {
+            background: var(--paper);
+            color: var(--blueprint);
+        }
+        .doc-pager-btn:disabled {
+            color: var(--line);
+            background: var(--paper);
+            cursor: not-allowed;
+        }
+        .doc-pager-ellipsis {
+            min-width: 36px;
+            text-align: center;
+            color: var(--ink-soft);
+            font-family: "IBM Plex Mono", "Noto Sans SC Subset", ui-monospace, monospace;
+        }
+        .doc-pager-jump { display: inline-flex; align-items: center; gap: 0; }
 
         footer.title-block { padding: 0 0 28px; margin-top: auto; }
         .tb {
@@ -420,8 +490,9 @@
             .nameplate { transform: none; width: 132px; }
             .docs-hero h1 { font-size: clamp(1.7rem, 8vw, 2.2rem); }
             .doc-head { display: none; }
-            .doc-head, .doc-row { grid-template-columns: 1fr auto; gap: 8px; padding: 12px; }
+            .doc-row { grid-template-columns: minmax(0, 1fr) 88px; gap: 8px; padding: 12px; }
             .bom-no { grid-column: 1 / -1; padding-top: 0; }
+            .doc-pager { justify-content: flex-start; padding: 10px 12px; }
             .tb { grid-template-columns: 1fr; }
             .tb div + div { border-left: 0; border-top: 1px solid var(--ink); }
             .tb-quote { grid-column: auto; }
@@ -542,6 +613,20 @@
                         </div>
                     </div>
                     <!-- INSTRUMENTS-LIST:END -->
+                    <nav class="doc-pager" id="doc-pager" aria-label="教学仪器分页">
+                        <span class="doc-pager-total mono" id="doc-pager-total">共 0 条</span>
+                        <label class="doc-pager-size">
+                            <select id="doc-pager-size" aria-label="每页条数">
+                                <option value="10" selected>10条/页</option>
+                                <option value="20">20条/页</option>
+                                <option value="50">50条/页</option>
+                            </select>
+                        </label>
+                        <div class="doc-pager-pages" id="doc-pager-pages"></div>
+                        <form class="doc-pager-jump" id="doc-pager-jump" action="#">
+                            <label>前往 <input type="number" id="doc-pager-goto" min="1" inputmode="numeric" aria-label="前往页码"> 页</label>
+                        </form>
+                    </nav>
                 </div>
             </section>
         </main>
@@ -584,6 +669,153 @@
                 if (toggle) toggle.checked = false;
             });
         });
+        (function () {
+            var list = document.querySelector('.doc-list');
+            var pager = document.getElementById('doc-pager');
+            var totalEl = document.getElementById('doc-pager-total');
+            var sizeEl = document.getElementById('doc-pager-size');
+            var pagesEl = document.getElementById('doc-pager-pages');
+            var jumpForm = document.getElementById('doc-pager-jump');
+            var gotoEl = document.getElementById('doc-pager-goto');
+            if (!list || !pager || !pagesEl) return;
+            var rows = list.querySelectorAll('.doc-row');
+            var total = rows.length;
+            var allowed = [10, 20, 50];
+            var size = 10;
+            var page = 1;
+
+            function pageCount() {
+                return Math.max(1, Math.ceil(total / size) || 1);
+            }
+
+            function clamp() {
+                var n = pageCount();
+                if (page < 1) page = 1;
+                if (page > n) page = n;
+            }
+
+            function visiblePages(current, last) {
+                if (last <= 8) {
+                    var all = [];
+                    for (var i = 1; i <= last; i++) all.push(i);
+                    return all;
+                }
+                var mark = {};
+                function add(p) {
+                    if (p >= 1 && p <= last) mark[p] = true;
+                }
+                add(1);
+                add(last);
+                var i;
+                for (i = current - 2; i <= current + 2; i++) add(i);
+                if (current <= 4) {
+                    for (i = 1; i <= 6; i++) add(i);
+                }
+                if (current >= last - 3) {
+                    for (i = last - 5; i <= last; i++) add(i);
+                }
+                var keys = Object.keys(mark).map(Number).sort(function (a, b) { return a - b; });
+                var out = [];
+                for (i = 0; i < keys.length; i++) {
+                    if (i > 0 && keys[i] - keys[i - 1] > 1) out.push('…');
+                    out.push(keys[i]);
+                }
+                return out;
+            }
+
+            function btn(label, opts) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'doc-pager-btn';
+                b.textContent = label;
+                if (opts.label) b.setAttribute('aria-label', opts.label);
+                if (opts.current) b.setAttribute('aria-current', 'page');
+                if (opts.disabled) b.disabled = true;
+                if (opts.go) {
+                    b.addEventListener('click', function () {
+                        page = opts.go;
+                        render();
+                    });
+                }
+                return b;
+            }
+
+            function render() {
+                clamp();
+                var start = (page - 1) * size;
+                var end = start + size;
+                for (var i = 0; i < rows.length; i++) {
+                    var hide = (i < start || i >= end);
+                    rows[i].hidden = hide;
+                    rows[i].classList.toggle('is-hidden', hide);
+                    rows[i].classList.toggle('is-first-visible', !hide && i === start);
+                }
+                if (totalEl) totalEl.textContent = '共 ' + total + ' 条';
+                if (gotoEl) {
+                    gotoEl.max = String(pageCount());
+                    gotoEl.placeholder = String(page);
+                }
+                pagesEl.textContent = '';
+                var last = pageCount();
+                pagesEl.appendChild(btn('‹', { label: '上一页', disabled: page <= 1, go: page - 1 }));
+                visiblePages(page, last).forEach(function (item) {
+                    if (item === '…') {
+                        var e = document.createElement('span');
+                        e.className = 'doc-pager-ellipsis';
+                        e.textContent = '…';
+                        e.setAttribute('aria-hidden', 'true');
+                        pagesEl.appendChild(e);
+                    } else {
+                        pagesEl.appendChild(btn(String(item), { current: item === page, go: item }));
+                    }
+                });
+                pagesEl.appendChild(btn('›', { label: '下一页', disabled: page >= last, go: page + 1 }));
+                try {
+                    var url = new URL(window.location.href);
+                    if (page === 1) url.searchParams.delete('page');
+                    else url.searchParams.set('page', String(page));
+                    if (size === 10) url.searchParams.delete('size');
+                    else url.searchParams.set('size', String(size));
+                    var next = url.pathname + url.search + url.hash;
+                    if (next !== window.location.pathname + window.location.search + window.location.hash) {
+                        history.replaceState(null, '', next);
+                    }
+                } catch (err) {}
+            }
+
+            function readUrl() {
+                try {
+                    var url = new URL(window.location.href);
+                    var s = parseInt(url.searchParams.get('size'), 10);
+                    if (allowed.indexOf(s) !== -1) size = s;
+                    var p = parseInt(url.searchParams.get('page'), 10);
+                    if (p >= 1) page = p;
+                } catch (err) {}
+                if (sizeEl) sizeEl.value = String(size);
+            }
+
+            if (sizeEl) {
+                sizeEl.addEventListener('change', function () {
+                    var s = parseInt(sizeEl.value, 10);
+                    if (allowed.indexOf(s) !== -1) size = s;
+                    page = 1;
+                    render();
+                });
+            }
+            if (jumpForm) {
+                jumpForm.addEventListener('submit', function (ev) {
+                    ev.preventDefault();
+                    var p = parseInt(gotoEl && gotoEl.value, 10);
+                    if (!isNaN(p)) {
+                        page = p;
+                        render();
+                    }
+                    if (gotoEl) gotoEl.value = '';
+                });
+            }
+            readUrl();
+            render();
+        })();
     </script>
 </body>
 </html>

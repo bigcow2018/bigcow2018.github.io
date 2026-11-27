@@ -4,10 +4,10 @@
 用法：在仓库根目录运行
     python3 instruments/build-manifest.py
 
-将文件放入 files/（可建子目录）后再运行本脚本。排序优先依据名称末尾的日期编号
-（YYYYMMDD + 序号，序号按数值排列，避免较长序号按字符串插到较短序号中间）；
+将文件放入 files/（可建子目录）后再运行本脚本。页面将各子目录中的文件合并为一份清单，
+不显示文件夹分组标题。排序优先依据名称末尾的日期编号（YYYYMMDD + 序号，序号按数值排列）；
 否则依据名称开头的数字编号（例如 001、002）。没有编号的条目按名称排在有编号的后面。
-请保持原始文件名。
+请保持原始文件名。仓库中的子目录结构保持不变。
 """
 
 from __future__ import annotations
@@ -122,30 +122,19 @@ def render_files(files: list[dict]) -> list[str]:
     return lines
 
 
-def render_tree(node: dict, is_root: bool = True, indent: int = 20) -> list[str]:
-    lines: list[str] = []
-    pad = " " * indent
-    if not is_root:
-        ident = file_id(node["name"])
-        ident_html = f'<span class="bom-no">{escape(ident)}</span> ' if ident else ""
-        lines.append(f'{pad}<section class="doc-folder">')
-        lines.append(
-            f'{pad}    <h2 class="doc-folder-head">{ident_html}{escape(node["name"])}</h2>'
-        )
-        indent += 4
-        pad = " " * indent
-    if node["files"]:
-        file_block = render_files(node["files"])
-        if not is_root:
-            file_block = [re.sub(r"^                    ", pad, line) for line in file_block]
-        lines.extend(file_block)
-    elif is_root and not node["dirs"]:
-        lines.append(f'{pad}<p class="doc-empty">暂无文档。</p>')
+def flatten_files(node: dict) -> list[dict]:
+    items = list(node["files"])
     for child in node["dirs"]:
-        lines.extend(render_tree(child, is_root=False, indent=indent))
-    if not is_root:
-        lines.append(f'{" " * (indent - 4)}</section>')
-    return lines
+        items.extend(flatten_files(child))
+    items.sort(key=lambda item: entry_key(item["name"]))
+    return items
+
+
+def render_list(node: dict) -> list[str]:
+    files = flatten_files(node)
+    if not files:
+        return ['                    <p class="doc-empty">暂无文档。</p>']
+    return render_files(files)
 
 
 def count_files(node: dict) -> int:
@@ -173,7 +162,7 @@ def main() -> int:
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    block = "\n".join(render_tree(tree, is_root=True))
+    block = "\n".join(render_list(tree))
     page = PAGE_PATH.read_text(encoding="utf-8")
     PAGE_PATH.write_text(update_page(page, block), encoding="utf-8")
     print(f"已写入 {MANIFEST_PATH.relative_to(ROOT.parent)}，共 {manifest['count']} 个文件。")
